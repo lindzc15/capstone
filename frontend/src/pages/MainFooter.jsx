@@ -2,7 +2,7 @@ import React from "react";
 
 const MainFooter = () => {
     return (
-        <footer className="text-center">
+        <footer className="text-center fixed-bottom">
             <p>&copy; {new Date().getFullYear()}<span className='logo-txt ms-2'>Let's Eat</span></p>
         </footer>
     );

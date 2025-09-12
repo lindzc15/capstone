@@ -7,7 +7,7 @@ const MainNav = () => {
             <div className="container-fluid">
                 <NavLink className="navbar-brand" to="/">
                     <img src="/logo.svg" alt="logo" width="80" height="60"></img>
-                    <span className="ms-2 navText logo-txt fw-normal">Let's Eat</span>
+                    <span className="ms-2 navText logo-txt">Let's Eat</span>
                 </NavLink>
                 <button
                     className="navbar-toggler"
@@ -23,6 +23,12 @@ const MainNav = () => {
                     <ul className="navbar-nav">
                         <li className="nav-item">
                             <NavLink className="nav-link navText header-txt" to="/">Home</NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link navText header-txt" to="/login">Login</NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link navText header-txt" to="/signUp">Sign Up</NavLink>
                         </li>
                     </ul>
                 </div>
