@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class LoginRequest(BaseModel):
     username: str
@@ -6,4 +7,4 @@ class LoginRequest(BaseModel):
 
 class LoginResponse(BaseModel):
     success: bool
-    jwt_token: str|None = None
+    jwt_token: Optional[str]
