@@ -31,6 +31,16 @@ function SignUp() {
                             </div>
                             <div className="col-sm-2 col-md-12 col-lg-12 mb-3 form-floating">
                                 <input
+                                    type="email"
+                                    className="form-control"
+                                    value=""
+                                    id="floatingEmail"
+                                    placeholder=""
+                                />
+                                <label className="form-label" htmlFor="floatingEmail">Email</label>
+                            </div>
+                            <div className="col-sm-2 col-md-12 col-lg-12 mb-3 form-floating">
+                                <input
                                     type="password"
                                     className="form-control"
                                     value=""
@@ -38,6 +48,16 @@ function SignUp() {
                                     placeholder=""
                                 />
                                 <label className="form-label" htmlFor="floatingPassword">Password</label>
+                            </div>
+                            <div className="col-sm-2 col-md-12 col-lg-12 mb-3 form-floating">
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    value=""
+                                    id="floatingConfirmPassword"
+                                    placeholder=""
+                                />
+                                <label className="form-label" htmlFor="floatingConfirmPassword">Confirm Password</label>
                             </div>
                             <p className="brown-txt">Already have an account? <a href="./login" className="brown-txt">Log in</a></p>
                             <button type="submit" className="btn btn-primary mt-3 classicButton">

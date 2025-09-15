@@ -2,7 +2,7 @@
   --main-red: #DB1C07;
   --main-yellow: #F4BD01;
   --main-brown: #744401;
-  --gen-background: #F2F0EF;
+  --gen-background: white;
 }
 
 html,
@@ -18,7 +18,7 @@ body {
 }
 
 .logo-txt {
-  font-family: "Gamja Flower", sans-serif;
+  font-family: "Luckiest Guy", sans-serif;
   font-weight: 600;
   font-style: normal;
   font-size: 1.25em;
@@ -51,6 +51,18 @@ p {
   min-width: 12em;
 }
 
+.btn-primary:hover {
+  background-color: var(--gen-background);
+  color: var(--main-brown);
+  border: 2px solid var(--main-brown);
+}
+
+.btn-primary:active {
+  background-color: var(--main-yellow) !important;
+  border-color: var(--main-brown) !important;
+}
+
+
 .brown-txt, .navText {
   color: var(--main-brown);
 }
@@ -64,5 +76,9 @@ p {
 .navbar-nav .nav-link:hover {
   color: var(--main-brown);
   font-size: 1.5em;
+}
+
+.form-control {
+  border-width: 2px;
 }
 

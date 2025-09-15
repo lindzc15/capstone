@@ -6,7 +6,7 @@ const MainNav = () => {
         <nav className="navbar navbar-expand-lg sticky-top">
             <div className="container-fluid">
                 <NavLink className="navbar-brand" to="/">
-                    <img src="/logo.svg" alt="logo" width="80" height="60"></img>
+                    <img src="/logo.svg" alt="logo" width="80" height="60" className="icon"></img>
                     <span className="ms-2 navText logo-txt">Let's Eat</span>
                 </NavLink>
                 <button
