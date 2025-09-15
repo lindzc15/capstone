@@ -8,3 +8,6 @@ class LoginRequest(BaseModel):
 class LoginResponse(BaseModel):
     success: bool
     jwt_token: Optional[str]
+
+class VerifyRequest(BaseModel):
+    jwt_token: str

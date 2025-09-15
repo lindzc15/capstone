@@ -46,5 +46,19 @@ class LoginServices:
         
         except Exception as e:
             raise Exception(f"Login failed: {str(e)}")
+        
+    @staticmethod
+    def verify_token(token: str):
+        try:
+            #decode token and return it
+            payload = jwt.decode(token, settings.secret_key, settings.algorithm)
+            return payload
+        
+        except jwt.ExpiredSignatureError:
+            raise Exception(f"Token has expired")
+        except jwt.InvalidTokenError:
+            raise Exception(f"Invalid token")
+        except Exception as e:
+            raise Exception(f"Failed to verify user")
 
             

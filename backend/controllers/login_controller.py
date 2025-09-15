@@ -1,13 +1,18 @@
 from fastapi import APIRouter, HTTPException
 
-from schemas.login_schema import LoginRequest, LoginResponse
+from schemas.login_schema import LoginRequest, LoginResponse, VerifyRequest
 from schemas.message_schema import MessageResponse
 from services.login_services import LoginServices
 
 
 router = APIRouter(prefix="/api/login", tags=["Authentication"])
 
-#user trying to login, sends post to login endpoint
+#to test that login endpoint is working
+@router.get("/", response_model=MessageResponse)
+def check_login_endpoint():
+    return {"message": "login endpoint found!"}
+
+#returning user logging in
 @router.post("/", response_model=LoginResponse)
 async def login(login: LoginRequest):
     try:
@@ -19,7 +24,12 @@ async def login(login: LoginRequest):
         raise HTTPException(status_code=401, detail=str(e))
     
 
-
-@router.get("/", response_model=MessageResponse)
-def check_login_endpoint():
-    return {"message": "login endpoint found!"}
+#verifies that jwt token still valid
+@router.post("/verify", response_model=LoginResponse)
+async def login(verify_request: VerifyRequest):
+    try:
+        verified = LoginServices.verify_token(verify_request.jwt_token)
+        return LoginResponse(success=True, jwt_token=verify_request.jwt_token)
+    except Exception as e:
+        #on failure, send back 401 error, proper authentication not acquired
+        raise HTTPException(status_code=401, detail=str(e))
