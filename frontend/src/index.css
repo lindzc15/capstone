@@ -82,3 +82,7 @@ p {
   border-width: 2px;
 }
 
+.red-txt {
+  color: var(--main-red);
+  font-weight: bold;
+}

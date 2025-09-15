@@ -11,16 +11,6 @@ function SignUp() {
                         <form>
                             <div className="col-sm-2 col-md-12 col-lg-12 mb-3 form-floating">
                                 <input
-                                    type="text"
-                                    className="form-control"
-                                    value=""
-                                    id="floatingName"
-                                    placeholder=""
-                                />
-                                <label className="form-label" htmlFor="floatingName">Name</label>
-                            </div>
-                            <div className="col-sm-2 col-md-12 col-lg-12 mb-3 form-floating">
-                                <input
                                     type="email"
                                     className="form-control"
                                     value=""
@@ -28,6 +18,16 @@ function SignUp() {
                                     placeholder=""
                                 />
                                 <label className="form-label" htmlFor="floatingUsername">Username</label>
+                            </div>
+                            <div className="col-sm-2 col-md-12 col-lg-12 mb-3 form-floating">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value=""
+                                    id="floatingName"
+                                    placeholder=""
+                                />
+                                <label className="form-label" htmlFor="floatingName">Name</label>
                             </div>
                             <div className="col-sm-2 col-md-12 col-lg-12 mb-3 form-floating">
                                 <input
@@ -59,7 +59,7 @@ function SignUp() {
                                 />
                                 <label className="form-label" htmlFor="floatingConfirmPassword">Confirm Password</label>
                             </div>
-                            <p className="brown-txt">Already have an account? <a href="./login" className="brown-txt">Log in</a></p>
+                            <p className="brown-txt">Already have an account? <a href="./login" className="red-txt">Log in</a></p>
                             <button type="submit" className="btn btn-primary mt-3 classicButton">
                                 Sign Up
                             </button>

@@ -29,7 +29,7 @@ function Login() {
                                 />
                                 <label className="form-label" htmlFor="floatingPassword">Password</label>
                             </div>
-                            <p className="brown-txt">New User? <a href="./signUp" className="brown-txt">Sign Up</a></p>
+                            <p className="brown-txt">New User? <a href="./signUp" className="red-txt">Sign Up</a></p>
                             <button type="submit" className="btn btn-primary mt-3 classicButton">
                                 Log in
                             </button>
