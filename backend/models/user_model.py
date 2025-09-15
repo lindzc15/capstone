@@ -4,3 +4,11 @@ class User:
         self.name = name
         self.email = email
         self.password_hash = password_hash
+
+    def to_dict(self):
+        return{
+            "username": self.username,
+            "name": self.name,
+            "email": self.email,
+            "password_hash": self.password_hash
+        }

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from schemas.login_schema import LoginRequest, LoginResponse, VerifyRequest
+from schemas.login_schema import LoginRequest, LoginResponse, VerifyRequest, RegisterRequest, RegisterResponse
 from schemas.message_schema import MessageResponse
 from services.login_services import LoginServices
 
@@ -20,7 +20,7 @@ async def login(login: LoginRequest):
         token = LoginServices.get_login_token(login.username, login.password)
         return LoginResponse(success=True, jwt_token=token)
     except Exception as e:
-        #On failure, send back 401 error, proper authentication not acquired
+        #on failure, send back 401 error, proper authentication not acquired
         raise HTTPException(status_code=401, detail=str(e))
     
 
@@ -33,3 +33,12 @@ async def login(verify_request: VerifyRequest):
     except Exception as e:
         #on failure, send back 401 error, proper authentication not acquired
         raise HTTPException(status_code=401, detail=str(e))
+    
+@router.post("/register", response_model=RegisterResponse)
+async def register(register_req: RegisterRequest):
+    try:
+        token = LoginServices.register(register_req.username, register_req.name, register_req.email, register_req.password)
+        return RegisterResponse(success=True, jwt_token=token)
+    except Exception as e:
+        #on failure, send back 500 error, unable to fullfill the request
+        raise HTTPException(status_code=500, detail=str(e))

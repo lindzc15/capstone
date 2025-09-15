@@ -11,3 +11,13 @@ class LoginResponse(BaseModel):
 
 class VerifyRequest(BaseModel):
     jwt_token: str
+
+class RegisterRequest(BaseModel):
+    username: str
+    name: str
+    email: str
+    password: str
+
+class RegisterResponse(BaseModel):
+    success: bool
+    jwt_token: Optional[str]
