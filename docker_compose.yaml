@@ -1,0 +1,16 @@
+services:
+  postgres_capstone_container:
+    image: postgres:18.0
+    container_name: "postgres_capstone_container"
+    restart: always
+    environment: 
+      POSTGRES_PASSWORD=L9547801c!
+      POSTGRES_USER=postgres
+      POSTGRES_DB=capstonedb
+    volumnes:
+      - postgres_capstone_data_container:/var/lib/postgresql
+      - ./sql_scripts:docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
+
+  

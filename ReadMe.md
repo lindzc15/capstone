@@ -6,5 +6,6 @@ test user: test_user
 test pass: test123
 test email: test123@user
 
+using port 8080 for uvicorn
 
 pip install -r requirements.txt, will install everything outlined in requirements.txt
