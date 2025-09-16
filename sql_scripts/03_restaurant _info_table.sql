@@ -1,9 +1,10 @@
 CREATE TABLE restaurant_info (
     restaurant_id SERIAL PRIMARY KEY,
-    price_range TINYINT,
-    _name VARCHAR(50) NOT NULL,
-    avg_rating DECIMAL(2,1),
-    rest_location VARCHAR(100) NOT NULL,
+    price_range INT,
+    rest_name VARCHAR(100) NOT NULL,
+    avg_rating DECIMAL(3,1),
+    loc VARCHAR(255) NOT NULL,
     menu_url VARCHAR(500),
-    FOREIGN KEY (folder_id) REFERENCES folders(folder_id)
+    website_url VARCHAR(500),
+    main_photo_url VARCHAR(500)
 )
