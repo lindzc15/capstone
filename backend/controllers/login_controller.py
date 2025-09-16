@@ -23,7 +23,6 @@ async def login(login: LoginRequest):
         #on failure, send back 401 error, proper authentication not acquired
         raise HTTPException(status_code=401, detail=str(e))
     
-
 #verifies that jwt token still valid
 @router.post("/verify", response_model=LoginResponse)
 async def login(verify_request: VerifyRequest):
@@ -34,6 +33,7 @@ async def login(verify_request: VerifyRequest):
         #on failure, send back 401 error, proper authentication not acquired
         raise HTTPException(status_code=401, detail=str(e))
     
+#new user registration
 @router.post("/register", response_model=RegisterResponse)
 async def register(register_req: RegisterRequest):
     try:

@@ -1,6 +1,8 @@
 # Installation requirements
 
 Node, uvicorn, react, PyJWT, pydantic, pydantic settings, run docker compose, start container
+sqlalchemy
+
 
 test user: test_user
 test pass: test123

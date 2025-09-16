@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import Optional
 
+#creates schemas that can easily be converted to/from json
+#Base model will validate against defined types
 class LoginRequest(BaseModel):
     username: str
     password: str
