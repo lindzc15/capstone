@@ -1,7 +1,7 @@
 # Installation requirements
 
 Node, uvicorn, react, PyJWT, pydantic, pydantic settings, run docker compose, start container
-sqlalchemy
+sqlalchemy, psycopg2-binary
 
 
 test user: test_user

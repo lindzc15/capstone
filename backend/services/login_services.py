@@ -24,7 +24,7 @@ class LoginServices:
                 raise Exception("Invalid credentials")
         
 
-            token = LoginServices.create_token(user.username, user.name, user.email)
+            token = LoginServices.create_token(user.username, user.full_name, user.email)
             return token
         
         except Exception as e:

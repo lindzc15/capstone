@@ -2,8 +2,9 @@ from sqlalchemy import Integer, String, Column
 
 from models.base_model import Base
 
+#creates a mapped class that corresponds to the users table
 class User(Base):
-    __table__name = 'users'
+    __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(50), unique=True, nullable=False)
     full_name = Column(String(100), nullable=False)
