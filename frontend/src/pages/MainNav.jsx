@@ -22,7 +22,7 @@ const MainNav = () => {
                 <div className="collapse navbar-collapse text-center" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <NavLink className="nav-link navText header-txt" to="/">Home</NavLink>
+                            <NavLink className="nav-link navText header-txt" to="/">About Us</NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink className="nav-link navText header-txt" to="/login">Login</NavLink>

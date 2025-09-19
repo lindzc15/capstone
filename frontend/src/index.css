@@ -3,6 +3,7 @@
   --main-yellow: #F4BD01;
   --main-brown: #744401;
   --gen-background: white;
+  --bootstrap-form-border: #ced4da; 
 }
 
 html,
@@ -85,4 +86,33 @@ p {
 .red-txt {
   color: var(--main-red);
   font-weight: bold;
+}
+
+#about-p {
+  max-width: 40em;
+  align-self: center;
+  text-indent: 1em;
+}
+
+.was-validated .form-control:invalid ~ .invalid-feedback {
+  text-align: left;
+  color: var(--main-red);
+}
+
+.was-validated .form-control:invalid {
+  border-color: var(--main-red);
+}
+
+.was-validated .form-control:valid,
+.form-control.is-valid {
+  border-color: var(--bootstrap-form-border);
+  background-image: none; 
+  box-shadow: none;
+}
+
+.was-validated .form-control:valid:focus,
+.form-control.is-valid:focus {
+  border-color: var(--bootstrap-form-border);  
+  box-shadow: none;        
+  background-image: none;  
 }
