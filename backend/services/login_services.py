@@ -50,12 +50,12 @@ class LoginServices:
     def register(self, username: str, full_name: str, email: str, password: str):
         if not username or not full_name or not email or not password:
             raise Exception("Missing required fields")
-        print(f"before creation: {full_name}")
+
         #hash the password using SHA256
         hashed_pass = hashlib.sha256(password.encode()).hexdigest()
         user = User(username, full_name, email, hashed_pass)
 
-        print(f"services user: {user.full_name}")
+
         #create the user
         try:
             new_user = self.user_repository.register_user(user)
