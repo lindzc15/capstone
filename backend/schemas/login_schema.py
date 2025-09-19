@@ -16,7 +16,7 @@ class VerifyRequest(BaseModel):
 
 class RegisterRequest(BaseModel):
     username: str
-    name: str
+    full_name: str
     email: str
     password: str
 

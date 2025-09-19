@@ -12,9 +12,9 @@ class User(Base):
     password_hash = Column(String(255), nullable=False)
 
 
-    def __init__(self, username: str, name: str, email: str, password_hash: str):
+    def __init__(self, username: str, full_name: str, email: str, password_hash: str):
         self.username = username
-        self.name = name
+        self.full_name = full_name
         self.email = email
         self.password_hash = password_hash
     

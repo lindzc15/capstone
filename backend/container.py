@@ -1,0 +1,30 @@
+from dependency_injector import containers, providers
+
+from db.db import get_db_session
+from services.login_services import LoginServices
+from repositories.user_repository import UserRepository
+
+#creates container to hold all services/dependencies to inject into functions
+class Container(containers.DeclarativeContainer):
+    #allows for automatic wiring
+    wiring_config = containers.WiringConfiguration(
+        modules = [
+            "controllers.login_controller"
+        ]
+    )
+
+    #gets db session as a resource, as it will need to be opened/closed
+    db_session = providers.Resource(get_db_session)
+
+
+    #uses factory to create new service/repository per request, ensuring isolation of db sessions
+    user_respository = providers.Factory(
+        UserRepository,
+        db = db_session
+    )
+
+    #inserts the created user repository into the service, along with the db session
+    login_service = providers.Factory(
+        LoginServices,
+        user_repository = user_respository
+    )

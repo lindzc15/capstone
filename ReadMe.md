@@ -1,7 +1,10 @@
 # Installation requirements
 
 Node, uvicorn, react, PyJWT, pydantic, pydantic settings, run docker compose, start container
-sqlalchemy, psycopg2-binary, alembic
+sqlalchemy, psycopg2-binary, alembic, dependency injector
+
+npm run dev for frontend -- specify port
+uvicorn main:app --reload --port 8080 for backend
 
 
 test user: test_user
@@ -15,8 +18,9 @@ docker running on 5433, postgres port in container using 5432
 pip install -r requirements.txt, will install everything outlined in requirements.txt
 
 
-When I update the database models:
+When updating the database models:
 alembic revision --autogenerate -m "added menu table"
+*add any new models to the env.py file
 alembic upgrade head
 
 

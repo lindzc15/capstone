@@ -6,13 +6,15 @@ from models.user_model import User
 from config import settings
 
 class LoginServices:
-    @staticmethod
-    def get_login_token(username: str, password: str):   
+    def __init__(self, user_repository: UserRepository):
+        self.user_repository = user_repository
+
+    def get_login_token(self, username: str, password: str):   
         try: 
             #fetch user from database, raise exception if user not found
-            user = UserRepository.get_user_by_username(username)
+            user = self.user_repository.get_user_by_username(username)
             if not user:
-                raise Exception("User not found")
+                raise Exception("Invalid credentials")
             
 
             #hash the password using SHA256
@@ -44,19 +46,20 @@ class LoginServices:
         except Exception as e:
             raise Exception(f"Failed to verify user")
         
-    @staticmethod
-    def register(username: str, name: str, email: str, password: str):
-        if not username or not name or not email or not password:
+
+    def register(self, username: str, full_name: str, email: str, password: str):
+        if not username or not full_name or not email or not password:
             raise Exception("Missing required fields")
-        
+        print(f"before creation: {full_name}")
         #hash the password using SHA256
         hashed_pass = hashlib.sha256(password.encode()).hexdigest()
-        user = User(username, name, email, hashed_pass)
+        user = User(username, full_name, email, hashed_pass)
 
+        print(f"services user: {user.full_name}")
         #create the user
         try:
-            new_user = UserRepository.register_user(user)
-            token = LoginServices.create_token(new_user.username, new_user.name, new_user.email)
+            new_user = self.user_repository.register_user(user)
+            token = LoginServices.create_token(new_user.username, new_user.full_name, new_user.email)
             return token
         except Exception as e:
             raise Exception(f"New user registration failed: {str(e)}")
