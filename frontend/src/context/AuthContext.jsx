@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-
+import { jwtDecode } from "jwt-decode";
 
 //acts as container to hold context of authentication state
 const AuthContext = useContext(null);
@@ -34,15 +34,27 @@ function AuthProvider() {
                 console.log(`Error completing fetch: ${error}`);
             })
             if (!response.ok) {
-            throw new Error(`${response.status}`);
+                const errorData = await response.json();
+                console.log(errorData.detail);
+                return false;
             }
 
-            //create jwt token & store in local storage
-            //return true 
-            const result = await response.json();
-            console.log(result);
+            //check if login successful
+            const login = await response.json();
+            if (!login.success) {
+                return false;
+            }
+            else {
+                //store login token in local storage, set user info
+                localStorage.setItem("token", JSON.stringify(login.jwt_token));
+                //SET USE INFO
+                //CREATE FUNCTION FOR EACH ITEM
+                //DECODE TOKEN AND SET IF VALID TOKEN
+                return true;
+
+            }
         } catch (error) {
-            console.error(error.message);
+            console.error(`Error completing login: ${error.message}`);
         }
     }
 
