@@ -1,8 +1,8 @@
-import {useContext, useEffect, useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 import { jwtDecode } from "jwt-decode";
 
 //acts as container to hold context of authentication state
-const AuthContext = useContext(null);
+const AuthContext = createContext(null);
 
 
 //write auth provider function; needs login function, verify login
@@ -12,13 +12,42 @@ const AuthContext = useContext(null);
 //auth route that returns outlet if logged in, else navigates to desired page; protects page behind login
 //wrap app.jsx routes in auth route
 
-function AuthProvider() {
+export const AuthProvider = ( {children}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [token, setToken] = useState(null);
     const [name, setName] = useState(null);
     const [username, setUsername] = useState(null);
     const [email, setEmail] = useState(null);
     const [authError, setAuthError] = useState(null);
+
+    function get_jwt_name(token) {
+        try {
+            const decoded = jwtDecode(token);
+            return decoded.user?.name || null;
+        } catch (err) {
+            console.error("Invalid token:", err);
+            return null;
+        }
+    }
+
+    function get_jwt_username(token) {
+        try {
+            const decoded = jwtDecode(token);
+            return decoded.user?.username || decoded.sub || null;
+        } catch (err) {
+            console.error("Invalid token:", err);
+            return null;
+        }
+    }
+
+    function get_jwt_email(token) {
+        try {
+            const decoded = jwtDecode(token);
+            return decoded.user?.email || null;
+        } catch (err) {
+            console.error("Invalid token:", err);
+            return null;
+        }
+    }
 
     async function login(user, pass) {
         //THIS IS TEMPLATE, NOT COMPLETE FUNCTION YET
@@ -45,11 +74,14 @@ function AuthProvider() {
                 return false;
             }
             else {
-                //store login token in local storage, set user info
+                //store login token in local storage, set user info, set logged in to true
                 localStorage.setItem("token", JSON.stringify(login.jwt_token));
-                //SET USE INFO
-                //CREATE FUNCTION FOR EACH ITEM
-                //DECODE TOKEN AND SET IF VALID TOKEN
+
+                setName(get_jwt_name(login.jwt_token));
+                setEmail(get_jwt_email(login.jwt_token));
+                setUsername(get_jwt_username(login.jwt_token));
+
+                setIsLoggedIn(true);
                 return true;
 
             }
@@ -61,7 +93,7 @@ function AuthProvider() {
     //things: isLoggedIn (check on mount), login, token, username, name, email, set token, logout, authError IMPORT THIS IN LOGIN/SIGNUP
     //AND USE IT INSTEAD OF THE OTHER ERROR MESSAGE 
     return (
-        <AuthContext.Provider value={{  }}>
+        <AuthContext.Provider value={{ login, name, username, email, isLoggedIn }}>
             {children}
         </AuthContext.Provider>
     )

@@ -1,32 +1,43 @@
 import MainLayout from "../layouts/MainLayout"
 
-import {useState, useRef} from 'react';
+import {useState, useRef, useContext} from 'react';
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    
+    const {isLoggedIn, login} = useContext(AuthContext);
+    const navigate = useNavigate();
     const formRef = useRef(null);
 
-    //remove error messages after typing
 
-
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-
         const form = formRef.current;
+        //reset error for invalid credentials
+        setError(null);
+
+        //form has been validated, display any error messages
+        form.classList.add("was-validated");
+
+        //check if any fields are invalid, stopping propogation if so
         if(!form.checkValidity()) {
             e.stopPropagation();
         }
-        
-        form.classList.add("was-validated");
-
-
-        //custom form validation? require no empty fields, add invalid class if so
-        //try to create account, if error display
-        //else checked if logged in, if error display
-        //if logged in navigate to profile page
+        else {
+            //all fields valid, try to login
+            await login(username, password);
+            
+            //if user logged in, navigate to profile, else set error message
+            if(isLoggedIn) {
+                navigate("/profile");
+            }
+            else {
+                setError("Invalid Credentials");
+            }
+        }
     }
     return (
         <MainLayout title="Login | Let's Eat">
