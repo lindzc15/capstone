@@ -17,6 +17,7 @@ export const AuthProvider = ( {children}) => {
     const [name, setName] = useState(null);
     const [username, setUsername] = useState(null);
     const [email, setEmail] = useState(null);
+    const [token, setToken] = useState(null);
     const [authError, setAuthError] = useState(null);
 
     function get_jwt_name(token) {
@@ -49,8 +50,79 @@ export const AuthProvider = ( {children}) => {
         }
     }
 
-    async function login(user, pass) {
-        //THIS IS TEMPLATE, NOT COMPLETE FUNCTION YET
+    //updates user info on token changes, ensuring states are up to date with login status
+    useEffect(() => {
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                setName(decoded.user?.name || null);
+                setUsername(decoded.user?.email || null);
+                setEmail(decoded.user?.email || null);
+                setIsLoggedIn(true);
+            } catch (err) {
+                console.error("Invalid token:", err);
+                setIsLoggedIn(false);
+                return null;
+            }
+        }
+        else {
+            setName(null);
+            setUsername(null);
+            setEmail(null);
+            setIsLoggedIn(false);
+        }
+    }, [token]);
+
+    useEffect(() => {
+        async function verify_token(token) {
+            //THIS IS TEMPLATE, NOT COMPLETE FUNCTION YET
+            const url = "http://localhost:8080/api/login/verify";
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({jwt_token: token})
+                }).catch(error => {
+                    console.log(`Error completing verify fetch: ${error}`);
+                })
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.log(errorData.detail);
+                    return false;
+                }
+
+                //check if verify successful
+                const login = await response.json();
+                if (!login.success) {
+                    return false;
+                }
+                else {
+                    //store login token in local storage, set user info, set logged in to true
+                    localStorage.setItem("token", JSON.stringify(login.jwt_token));
+
+                    setName(get_jwt_name(login.jwt_token));
+                    setEmail(get_jwt_email(login.jwt_token));
+                    setUsername(get_jwt_username(login.jwt_token));
+
+                    setToken(login.jwt_token);
+                    setIsLoggedIn(true);
+                    return true;
+
+                }
+            } catch (error) {
+                console.error(`Error verifying user: ${error.message}`);
+            }
+        }
+
+        const jwt_token = JSON.parse(localStorage.getItem('token'));
+        if(jwt_token) {
+            verify_token(jwt_token);
+        }
+    }, []);
+
+    async function login(user, pass) {  
         const url = "http://localhost:8080/api/login/";
         try {
             const response = await fetch(url, {
@@ -76,6 +148,7 @@ export const AuthProvider = ( {children}) => {
             else {
                 //store login token in local storage, set user info, set logged in to true
                 localStorage.setItem("token", JSON.stringify(login.jwt_token));
+                setToken(login.jwt_token);
 
                 setName(get_jwt_name(login.jwt_token));
                 setEmail(get_jwt_email(login.jwt_token));
@@ -90,10 +163,17 @@ export const AuthProvider = ( {children}) => {
         }
     }
 
-    //things: isLoggedIn (check on mount), login, token, username, name, email, set token, logout, authError IMPORT THIS IN LOGIN/SIGNUP
-    //AND USE IT INSTEAD OF THE OTHER ERROR MESSAGE 
+    function logout() {
+        localStorage.removeItem('token');
+        setName(null);
+        setEmail(null);
+        setUsername(null);
+
+        setIsLoggedIn(false);
+    }
+
     return (
-        <AuthContext.Provider value={{ login, name, username, email, isLoggedIn }}>
+        <AuthContext.Provider value={{ login, name, username, email, isLoggedIn, logout }}>
             {children}
         </AuthContext.Provider>
     )

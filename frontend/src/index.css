@@ -116,3 +116,24 @@ p {
   box-shadow: none;        
   background-image: none;  
 }
+
+.btn-modal {
+  color: var(--main-brown);
+  background-color: var(--main-yellow);
+  border-color: var(--main-brown);
+  font-weight: bold;
+  border-width: 2px;
+  min-width: 8em;
+}
+
+.btn-modal:hover {
+  background-color: var(--gen-background);
+  color: var(--main-brown);
+  border: 2px solid var(--main-brown);
+}
+
+#logout-nav:hover {
+  align-self: center;
+  color: var(--main-brown);
+  font-size: 1.5em;
+}

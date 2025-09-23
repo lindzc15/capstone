@@ -1,7 +1,28 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import {React, useContext, useEffect, useState, useRef} from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const MainNav = () => {
+    const {isLoggedIn, logout} = useContext(AuthContext);
+    const nav = useNavigate();
+
+    const [modal, setModal] = useState(false);
+
+    function handleLogout() {
+        logout();
+        setModal(false);
+        nav("/login");
+    }
+    
+    function hideModal() {
+        setModal(false);
+    }
+    
+    function showModal() {
+        console.log("logging out?")
+        setModal(true);
+    }
+
     return (
         <nav className="navbar navbar-expand-lg sticky-top">
             <div className="container-fluid">
@@ -24,15 +45,55 @@ const MainNav = () => {
                         <li className="nav-item">
                             <NavLink className="nav-link navText header-txt" to="/">About Us</NavLink>
                         </li>
-                        <li className="nav-item">
-                            <NavLink className="nav-link navText header-txt" to="/login">Login</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink className="nav-link navText header-txt" to="/signUp">Sign Up</NavLink>
-                        </li>
+                        {!isLoggedIn ? (
+                            <>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link navText header-txt" to="/login">Login</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link navText header-txt" to="/signUp">Sign Up</NavLink>
+                                </li>
+                                
+                            </>
+                        ) : (
+                            <>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link navText header-txt" to="/profile">Profile</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <button
+                                        type="button"
+                                        onClick={showModal}
+                                        className="navText header-txt nav-link"
+                                        id="logout-nav"
+                                    >
+                                        Logout
+                                    </button>
+                                </li>
+                            </>
+                        )}
                     </ul>
                 </div>
             </div>
+            {modal && (
+                <div className="modal d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+                    <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                        <h5 className="modal-title">Logging Out</h5>
+                        <button type="button" className="btn-close" aria-label="Close" onClick={hideModal}></button>
+                        </div>
+                        <div className="modal-body">
+                        <p>Are you sure you want to logout?</p>
+                        </div>
+                        <div className="modal-footer">
+                        <button type="button" className="btn btn-modal" onClick={handleLogout}>Logout</button>
+                        <button type="button" className="btn btn-secondary" onClick={hideModal}>Cancel</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            )}
         </nav>
     );
 };
