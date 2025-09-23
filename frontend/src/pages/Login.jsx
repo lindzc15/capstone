@@ -1,6 +1,6 @@
 import MainLayout from "../layouts/MainLayout"
 
-import {useState, useRef, useContext} from 'react';
+import {useState, useRef, useContext, useEffect} from 'react';
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -12,6 +12,11 @@ function Login() {
     const navigate = useNavigate();
     const formRef = useRef(null);
 
+    useEffect (() => {
+        if (isLoggedIn) {
+        navigate('/profile');
+        }
+    }, [isLoggedIn])
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -28,10 +33,10 @@ function Login() {
         }
         else {
             //all fields valid, try to login
-            await login(username, password);
+            const loggedIn = await login(username, password);
             
             //if user logged in, navigate to profile, else set error message
-            if(isLoggedIn) {
+            if(loggedIn) {
                 navigate("/profile");
             }
             else {
