@@ -1,5 +1,5 @@
 import MainLayout from "../layouts/MainLayout"
-import {useState, useRef, useContext} from 'react';
+import {useState, useRef, useContext, useEffect} from 'react';
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
@@ -9,41 +9,59 @@ function SignUp() {
     const [email, setEmail] = useState("")
     const [pass, setPass] = useState("")
     const [passConfirm, setPassConfirm] = useState("")
-
-    const nav = useNavigate();
-    const register = useContext(AuthContext);
-
     const [error, setError] = useState("")
 
+    const nav = useNavigate();
+    const {register, authError, isLoggedIn} = useContext(AuthContext);
+
+    //get the reference to the form
     const formRef = useRef(null);
 
-    //remove error messages after typing?
+    //if auth error state changes, set the error message to be displayed
+    useEffect(() => {
+        if (authError) {
+            setError(authError);
+        }
+    }, [authError]);
 
-    function handleSubmit(e) {
+    //if logged in state changes, navigate to profile if logged in
+    useEffect(() => {
+    if (isLoggedIn) {
+        nav("/profile");
+    }
+    }, [isLoggedIn]);
+
+    //when sign up buton clicked, attempt to register new user
+    async function handleSubmit(e) {
         e.preventDefault();
-
         const form = formRef.current;
+
+        //set form as validated, any invalid fields will get highlighted
+        form.classList.add("was-validated");
+
+        //check if any fields are invalid, stopping propogation if so
         if(!form.checkValidity()) {
+            e.stopPropagation();
         }
         
-        form.classList.add("was-validated");
-        //check that passwords are the same
+        //if passwords don't match, display error message
         if(pass != passConfirm) {
             setError("Passwords do not match");
         }
         else{
+            //if passwords match, clear errors and attempt to register
             setError("");
-            const registered = register(username, name, email, pass);
+            const registered = await register(username, name, email, pass);
+
+            //if registration successful, state change will cause navigation to profile page
+            //if unsuccessful, display error
             if (registered) {
-                nav("/profile");
+                console.log("logging in");
             }
             else {
-                setError("");
+                setError("Account registration failed");
             }
         }
-        //try to create account, if error display
-        //else checked if logged in, if error display
-        //if logged in navigate to profile page
     }
     return (
         <MainLayout title="Sign Up | Let's Eat">

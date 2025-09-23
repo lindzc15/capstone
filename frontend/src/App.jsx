@@ -8,6 +8,7 @@ import Profile from "./pages/Profile"
 import { AuthContext } from "./context/AuthContext";
 import AuthRoute from './AuthRoute';
 
+//protects routes that require authentication
 function App() {
   return (
     <BrowserRouter>

@@ -12,32 +12,39 @@ function Login() {
     const navigate = useNavigate();
     const formRef = useRef(null);
 
+    //if logged in state changes to true, navigate to profile
     useEffect (() => {
         if (isLoggedIn) {
         navigate('/profile');
         }
     }, [isLoggedIn])
 
+    //when login button clicked, attempt login
     async function handleSubmit(e) {
         e.preventDefault();
+
+        //get the reference to the form
         const form = formRef.current;
-        //reset error for invalid credentials
+
+        //reset error message for invalid credentials
         setError(null);
 
-        //form has been validated, display any error messages
+        //set form as validated, any invalid fields will get highlighted
         form.classList.add("was-validated");
 
         //check if any fields are invalid, stopping propogation if so
         if(!form.checkValidity()) {
             e.stopPropagation();
         }
+
         else {
             //all fields valid, try to login
             const loggedIn = await login(username, password);
             
-            //if user logged in, navigate to profile, else set error message
+            //if user logged in, state change will navigate to profile
+            //if not, it will display error message
             if(loggedIn) {
-                navigate("/profile");
+                ("Logging in")
             }
             else {
                 setError("Invalid Credentials");

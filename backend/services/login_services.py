@@ -9,6 +9,7 @@ class LoginServices:
     def __init__(self, user_repository: UserRepository):
         self.user_repository = user_repository
 
+    #sends info to repository, validates that user exists, and then gets jwt token
     def get_login_token(self, username: str, password: str):   
         try: 
             #fetch user from database, raise exception if user not found
@@ -32,6 +33,7 @@ class LoginServices:
         except Exception as e:
             raise Exception(f"Login failed: {str(e)}")
         
+    #verify that token is valid and hasn't expired
     @staticmethod
     def verify_token(token: str):
         try:
@@ -47,7 +49,9 @@ class LoginServices:
             raise Exception(f"Failed to verify user")
         
 
+    #user registration, plus will get a token so user can immediately access profile page
     def register(self, username: str, full_name: str, email: str, password: str):
+        #all fields are required to register
         if not username or not full_name or not email or not password:
             raise Exception("Missing required fields")
 
@@ -56,7 +60,8 @@ class LoginServices:
         user = User(username, full_name, email, hashed_pass)
 
 
-        #create the user
+        #send user info to repository for registration
+        #if successful get jwt token
         try:
             success, new_user, message = self.user_repository.register_user(user)
             if(success):
@@ -68,8 +73,10 @@ class LoginServices:
             raise Exception(f"New user registration failed: {str(e)}")
 
 
+    #creates a token from user info
     @staticmethod
     def create_token(username: str, name: str, email: str):
+            #user payload to insert into the token
             user_payload = {
                 "username": username,
                 "name": name,

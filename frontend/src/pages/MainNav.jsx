@@ -6,23 +6,28 @@ const MainNav = () => {
     const {isLoggedIn, logout} = useContext(AuthContext);
     const nav = useNavigate();
 
+    //tracks state of logout to determin if it should be displayed or not
     const [modal, setModal] = useState(false);
 
+    //user has confirmed logout, perform logout and hide modal, navigating back to login page
     function handleLogout() {
         logout();
         setModal(false);
         nav("/login");
     }
     
+    //modal closed, hide it
     function hideModal() {
         setModal(false);
     }
     
+    //user clicked logout, ask for confirmation by displaying modal
     function showModal() {
         console.log("logging out?")
         setModal(true);
     }
 
+    //nav bar will display differently for logged in vs logged out users
     return (
         <nav className="navbar navbar-expand-lg sticky-top">
             <div className="container-fluid">

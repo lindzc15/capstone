@@ -4,14 +4,7 @@ import { jwtDecode } from "jwt-decode";
 //acts as container to hold context of authentication state
 const AuthContext = createContext(null);
 
-
-//write auth provider function; needs login function, verify login
-//default export auth provider
-//export auth context
-//wrapp app in auth provider
-//auth route that returns outlet if logged in, else navigates to desired page; protects page behind login
-//wrap app.jsx routes in auth route
-
+//specifies the authentication state info
 export const AuthProvider = ( {children}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [name, setName] = useState(null);
@@ -20,6 +13,7 @@ export const AuthProvider = ( {children}) => {
     const [token, setToken] = useState(null);
     const [authError, setAuthError] = useState(null);
 
+    //extracts name from the jwt token, checking for errors
     function get_jwt_name(token) {
         try {
             const decoded = jwtDecode(token);
@@ -30,6 +24,7 @@ export const AuthProvider = ( {children}) => {
         }
     }
 
+    //extracts username from jwt token, checking for errors
     function get_jwt_username(token) {
         try {
             const decoded = jwtDecode(token);
@@ -40,6 +35,7 @@ export const AuthProvider = ( {children}) => {
         }
     }
 
+    //extracts email from jwt token, checking for errors
     function get_jwt_email(token) {
         try {
             const decoded = jwtDecode(token);
@@ -50,7 +46,7 @@ export const AuthProvider = ( {children}) => {
         }
     }
 
-    //updates user info on token changes, ensuring states are up to date with login status
+    //updates user info/logged in state on token changes, ensuring states are up to date with login status
     useEffect(() => {
         if (token) {
             try {
@@ -73,9 +69,10 @@ export const AuthProvider = ( {children}) => {
         }
     }, [token]);
 
+    //checks for token in local storage on page load
+    //if found, send to server for verification
     useEffect(() => {
         async function verify_token(token) {
-            //THIS IS TEMPLATE, NOT COMPLETE FUNCTION YET
             const url = "http://localhost:8080/api/login/verify";
             try {
                 const response = await fetch(url, {
@@ -86,6 +83,7 @@ export const AuthProvider = ( {children}) => {
                     body: JSON.stringify({jwt_token: token})
                 }).catch(error => {
                     console.log(`Error completing verify fetch: ${error}`);
+                    return false;
                 })
                 if (!response.ok) {
                     const errorData = await response.json();
@@ -93,13 +91,13 @@ export const AuthProvider = ( {children}) => {
                     return false;
                 }
 
-                //check if verify successful
+                //if token verification failed, return false
                 const login = await response.json();
                 if (!login.success) {
                     return false;
                 }
                 else {
-                    //store login token in local storage, set user info, set logged in to true
+                    //if token verification successful, store login token in local storage, set user info, set logged in to true
                     localStorage.setItem("token", JSON.stringify(login.jwt_token));
 
                     setName(get_jwt_name(login.jwt_token));
@@ -116,12 +114,15 @@ export const AuthProvider = ( {children}) => {
             }
         }
 
+        //only do verification call if local storage token found
         const jwt_token = JSON.parse(localStorage.getItem('token'));
         if(jwt_token) {
             verify_token(jwt_token);
         }
     }, []);
 
+
+    //send login credentials to server for authentication
     async function login(user, pass) {  
         const url = "http://localhost:8080/api/login/";
         try {
@@ -133,20 +134,22 @@ export const AuthProvider = ( {children}) => {
                 body: JSON.stringify({username: user, password: pass})
             }).catch(error => {
                 console.log(`Error completing fetch: ${error}`);
+                return false;
             })
+            //if error from response, return false for login
             if (!response.ok) {
                 const errorData = await response.json();
                 console.log(errorData.detail);
                 return false;
             }
 
-            //check if login successful
+            //if login wasn't successful, return false
             const login = await response.json();
             if (!login.success) {
                 return false;
             }
             else {
-                //store login token in local storage, set user info, set logged in to true
+                //if login was successful, store login token in local storage, set user info, set logged in to true
                 localStorage.setItem("token", JSON.stringify(login.jwt_token));
                 setToken(login.jwt_token);
 
@@ -163,8 +166,10 @@ export const AuthProvider = ( {children}) => {
         }
     }
 
+
+    //attempt new user registration, sending credentials to server
     async function register(username, name, email, pass) {
-                const url = "http://localhost:8080/api/login/register";
+        const url = "http://localhost:8080/api/login/register";
         try {
             const response = await fetch(url, {
                 method: "POST",
@@ -175,19 +180,22 @@ export const AuthProvider = ( {children}) => {
             }).catch(error => {
                 console.log(`Error completing fetch: ${error}`);
             })
+            //if error from response, return false 
             if (!response.ok) {
                 const errorData = await response.json();
                 console.log(errorData.detail);
                 return false;
             }
 
-            //check if register successful
+            //if registration failed, set error message
+            //(this will be a controlled error message; only says if user/email taken, otherwise message is empty)
             const register = await response.json();
             if (!register.success) {
+                setAuthError(register.message);
                 return false;
             }
             else {
-                //store returned token in local storage, set user info, set logged in to true
+                //if registration successful, store returned token in local storage, set user info, set logged in to true
                 localStorage.setItem("token", JSON.stringify(register.jwt_token));
                 setToken(login.jwt_token);
 
@@ -196,6 +204,9 @@ export const AuthProvider = ( {children}) => {
                 setUsername(get_jwt_username(register.jwt_token));
 
                 setIsLoggedIn(true);
+
+                //remove register errors 
+                setAuthError("");
                 return true;
 
             }
@@ -204,6 +215,7 @@ export const AuthProvider = ( {children}) => {
         }
     }
 
+    //log user out; remove user info/token from states, remove token from local storage
     function logout() {
         localStorage.removeItem('token');
         setName(null);
@@ -213,8 +225,9 @@ export const AuthProvider = ( {children}) => {
         setIsLoggedIn(false);
     }
 
+    //allows authentication props to be accessed across the app
     return (
-        <AuthContext.Provider value={{ login, name, username, email, isLoggedIn, logout, register }}>
+        <AuthContext.Provider value={{ login, name, username, email, isLoggedIn, logout, register, authError }}>
             {children}
         </AuthContext.Provider>
     )
