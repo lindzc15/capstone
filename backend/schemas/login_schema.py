@@ -23,3 +23,5 @@ class RegisterRequest(BaseModel):
 class RegisterResponse(BaseModel):
     success: bool
     jwt_token: Optional[str]
+    message: Optional[str]
+

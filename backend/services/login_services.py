@@ -58,9 +58,12 @@ class LoginServices:
 
         #create the user
         try:
-            new_user = self.user_repository.register_user(user)
-            token = LoginServices.create_token(new_user.username, new_user.full_name, new_user.email)
-            return token
+            success, new_user, message = self.user_repository.register_user(user)
+            if(success):
+                token = LoginServices.create_token(user.username, user.full_name, user.email)
+                return success, token, message
+            else:
+                return success, new_user, message
         except Exception as e:
             raise Exception(f"New user registration failed: {str(e)}")
 

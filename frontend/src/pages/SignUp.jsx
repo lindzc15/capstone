@@ -1,5 +1,7 @@
 import MainLayout from "../layouts/MainLayout"
-import {useState, useRef} from 'react';
+import {useState, useRef, useContext} from 'react';
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 function SignUp() {
     const [username, setUsername] = useState("")
@@ -7,6 +9,9 @@ function SignUp() {
     const [email, setEmail] = useState("")
     const [pass, setPass] = useState("")
     const [passConfirm, setPassConfirm] = useState("")
+
+    const nav = useNavigate();
+    const register = useContext(AuthContext);
 
     const [error, setError] = useState("")
 
@@ -23,6 +28,19 @@ function SignUp() {
         
         form.classList.add("was-validated");
         //check that passwords are the same
+        if(pass != passConfirm) {
+            setError("Passwords do not match");
+        }
+        else{
+            setError("");
+            const registered = register(username, name, email, pass);
+            if (registered) {
+                nav("/profile");
+            }
+            else {
+                setError("");
+            }
+        }
         //try to create account, if error display
         //else checked if logged in, if error display
         //if logged in navigate to profile page

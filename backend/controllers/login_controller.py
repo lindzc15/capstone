@@ -46,8 +46,8 @@ async def login(verify_request: VerifyRequest, login_service: LoginServices = De
 @inject
 async def register(register_req: RegisterRequest, login_service: LoginServices = Depends(Provide[Container.login_service])):
     try:
-        token = login_service.register(register_req.username, register_req.full_name, register_req.email, register_req.password)
-        return RegisterResponse(success=True, jwt_token=token)
+        success, token, msg = login_service.register(register_req.username, register_req.full_name, register_req.email, register_req.password)
+        return RegisterResponse(success=success, jwt_token=token, message = msg)
     except Exception as e:
         #on failure, send back 500 error, unable to fullfill the request
         raise HTTPException(status_code=500, detail=str(e))
