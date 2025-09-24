@@ -10,9 +10,9 @@ function Profile () {
             <h3 className="text-center mb-4 header-txt">My Profile</h3>
             <div className="card align-self-center">
                 <ul className="list-group list-group-flush">
-                    <li className="list-group-item brown-txt col-sm-2 col-md-12 col-lg-12 mt-2 mb-2 profile-txt"><span className='bold'>Name:</span><span className='user-info'>{name}</span></li>
-                    <li className="list-group-item brown-txt col-sm-2 col-md-12 col-lg-12 mt-2 mb-2 profile-txt"><span className='bold'>Username:</span><span className='user-info'>{username}</span></li>
-                    <li className="list-group-item brown-txt col-sm-2 col-md-12 col-lg-12 mt-2 mb-2 profile-txt"><span className='bold'>Email:</span><span className='user-info'>{email}</span> </li>
+                    <li className="list-group-item brown-txt mt-2 mb-2 profile-txt"><span className='bold'>Name:</span><span className='user-info'>{name}</span></li>
+                    <li className="list-group-item brown-txt mt-2 mb-2 profile-txt"><span className='bold'>Username:</span><span className='user-info'>{username}</span></li>
+                    <li className="list-group-item brown-txt mt-2 mb-2 profile-txt"><span className='bold'>Email:</span><span className='user-info'>{email}</span> </li>
                 </ul>
             </div>
             </div>
