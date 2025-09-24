@@ -137,3 +137,20 @@ p {
   color: var(--main-brown);
   font-size: 1.5em;
 }
+
+.card {
+  width: 18rem;
+}
+.profile-txt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.user-info {
+  text-align: right;
+}

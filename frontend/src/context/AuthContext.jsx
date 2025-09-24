@@ -52,7 +52,7 @@ export const AuthProvider = ( {children}) => {
             try {
                 const decoded = jwtDecode(token);
                 setName(decoded.user?.name || null);
-                setUsername(decoded.user?.email || null);
+                setUsername(decoded.user?.username || null);
                 setEmail(decoded.user?.email || null);
                 setIsLoggedIn(true);
             } catch (err) {
@@ -197,7 +197,7 @@ export const AuthProvider = ( {children}) => {
             else {
                 //if registration successful, store returned token in local storage, set user info, set logged in to true
                 localStorage.setItem("token", JSON.stringify(register.jwt_token));
-                setToken(login.jwt_token);
+                setToken(register.jwt_token);
 
                 setName(get_jwt_name(register.jwt_token));
                 setEmail(get_jwt_email(register.jwt_token));
