@@ -30,3 +30,5 @@ alembic upgrade head
 
 run tests:
 - database: pytest tests/database_tests.py.  *tests adding user, must then remove the user*
+npx vitetest for frontend
+server almost same as database: pytest tests/server_tests.py

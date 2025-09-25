@@ -15,6 +15,7 @@ engine = create_engine(url)
 Session = sessionmaker(bind=engine)
 
 
+#handles set up/take down for db, plus provides a test user
 class TestDatabase:
     def setup_class(self):
         Base.metadata.create_all(engine)
