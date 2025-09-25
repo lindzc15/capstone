@@ -1,7 +1,7 @@
 # Installation requirements
 
 Node, uvicorn, react, PyJWT, pydantic, pydantic settings, run docker compose, start container
-sqlalchemy, psycopg2-binary, alembic, dependency injector
+sqlalchemy, psycopg2-binary, alembic, dependency injector, pytest, httpx
 
 npm run dev for frontend -- specify port
 uvicorn main:app --reload --port 8080 for backend
@@ -27,3 +27,6 @@ alembic upgrade head
 
 when professor needs to pull updated table version:
 alembic upgrade head
+
+run tests:
+- database: pytest tests/database_tests.py.  *tests adding user, must then remove the user*

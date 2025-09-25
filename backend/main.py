@@ -23,6 +23,7 @@ app.add_middleware(
 
 #add container for dependency injection
 container = Container()
+container.wire(modules=[login_controller])
 app.container = container
 
 #add controllers to the server
