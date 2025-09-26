@@ -1,7 +1,7 @@
 from models.user_model import User
 from container import Container
 from controllers import login_controller
-from config import settings
+
 
 import hashlib
 from dependency_injector import providers
@@ -12,8 +12,7 @@ fake_db = {
         "username": "test_user",
         "full_name": "User",
         "email": "test@test",
-        # store PLAIN password here; we will hash it when creating the User
-        "password": "test123"
+        "password_hash": "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae"
     }
 }
 
@@ -22,13 +21,11 @@ class FakeUserRepo:
     def get_user_by_username(self, username):
         if username in fake_db:
             user = fake_db[username]
-            # Build SQLAlchemy User correctly: it expects username, full_name, email, password_hash
-            hashed = hashlib.sha256(user["password"].encode()).hexdigest()
             return User(
                 username=user["username"],
                 full_name=user["full_name"],
                 email=user["email"],
-                password_hash=hashed
+                password_hash=user["password_hash"]
             )
         raise Exception("Error finding user account")
 
@@ -39,12 +36,11 @@ class FakeLoginServices:
 
     def get_login_token(self, username: str, password: str):
         user = self.user_repo.get_user_by_username(username)
-        # hash incoming password like the real service
         hashed_pass = hashlib.sha256(password.encode()).hexdigest()
         if user and hashed_pass == user.password_hash:
             return "fake_jwt"
         raise Exception("Invalid credentials")
-
+    
 # overrides dependencies used
 def override_login_service():
     return FakeLoginServices(FakeUserRepo())
@@ -52,7 +48,16 @@ def override_login_service():
 def override_user_repo():
     return FakeUserRepo()
 
-# IMPORTANT: use the SAME container instance the app uses
+
+    
+"""
+The following section was made with assistance from AI, as setting up the container and overrides was complex.
+I learned that I needed to use the SAME container as the app, rather than creating a new one, or it would still use the container from the actual app & I wouldn't be able to override providers.
+Using providers.Object pins the provider to my fake repo and service instances rather than using factory calls for them
+
+I also learned that the test client had to be created AFTER performing overrides and wiring. This ensures the client won't hit real providers before my fake ones are set up
+"""
+
 from main import app
 try:
     app_container = getattr(app, "container")
@@ -69,6 +74,12 @@ app_container.wire(modules=[login_controller])
 
 from fastapi.testclient import TestClient
 client = TestClient(app)
+
+
+
+
+
+##TESTS
 
 # tests that server is running
 def test_health():

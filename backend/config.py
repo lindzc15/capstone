@@ -1,4 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pathlib import Path
+
 
 #holds password/username settings from .env file
 class Settings(BaseSettings):
@@ -17,7 +19,10 @@ class Settings(BaseSettings):
         return f"postgresql://{self.database_user}:{self.database_password}@{self.database_host}:{self.database_port}/{self.database_name}"
 
     #specifies the file to fill configurations with
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(
+        env_file=Path(__file__).with_name(".env"),
+        env_file_encoding="utf-8",
+    )
 
 
 #populates each field with values found in the .env file
