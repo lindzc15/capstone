@@ -10,7 +10,7 @@ import { vi } from "vitest";
 const mockLogin = vi.fn();
 const mockRegister = vi.fn(() => Promise.resolve(true));
 
-//renders the pages with the auth context necessary 
+//renders the pages with the auth context necessary, overriding login/register with mock functions
 const renderWithAuth = (ui, contextValue = { isLoggedIn: false, login: mockLogin, register: mockRegister }) => {
   return render(
     <AuthContext.Provider value={contextValue}>
@@ -28,6 +28,7 @@ test("renders login form", () => {
   expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
 });
 
+
 test("login button is clickable", () => {
   renderWithAuth(<Login />);
   
@@ -43,6 +44,9 @@ test("login button is clickable", () => {
   expect(mockLogin).toHaveBeenCalledTimes(1);
 });
 
+
+
+
 // --- SIGN UP TESTS ---
 test("renders sign up form", () => {
   renderWithAuth(<SignUp />);
@@ -54,7 +58,8 @@ test("renders sign up form", () => {
   expect(screen.getByLabelText(/^confirm password$/i)).toBeInTheDocument();
 });
 
-test("sign up button is clickable", async () => {
+
+test("sign up button is clickable", () => {
   renderWithAuth(<SignUp />);
   
   const usernameInput = screen.getByLabelText(/^username$/i);
@@ -71,7 +76,7 @@ test("sign up button is clickable", async () => {
   fireEvent.change(passwordInput, { target: { value: "test123" } });
   fireEvent.change(confirmPasswordInput, { target: { value: "test123" } });
 
-  await fireEvent.click(button);
+  fireEvent.click(button);
 
   expect(button).toBeEnabled();
   expect(mockRegister).toHaveBeenCalledTimes(1); 
