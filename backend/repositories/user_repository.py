@@ -21,7 +21,7 @@ class UserRepository:
             return user     
         except Exception as e:
             self.db.rollback()
-            raise Exception(f"Error finding user account")
+            raise Exception(f"Invalid Credentials")
     
 
     #add new user to the database

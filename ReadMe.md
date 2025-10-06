@@ -8,7 +8,7 @@ and keep track of their favorite food and things to remember about each restaura
 The required dependencies are listed in `backend/requirements.txt`. To install, run these commands from the project root:
  ```
  cd backend
- pip install -r requirement.txt
+ pip install -r requirements.txt
  ```
 
 ### Database
@@ -19,6 +19,7 @@ docker compose -f docker-compose.yaml up -d
 
 To ensure the database is up to date with the current version, run the following command from the project root:
 ```
+cd backend
 alembic upgrade head
 ```
 
@@ -68,7 +69,7 @@ python -m pytest tests/database_test.py
 To run the frontend tests, run the following commands from the project root:
 ```
 cd frontend
-npx vitetest
+npx vitest
 ```
 
 ## Other Notes
