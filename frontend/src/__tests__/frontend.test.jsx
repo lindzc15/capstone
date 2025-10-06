@@ -7,7 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 import { vi } from "vitest";
 
 //mocks login and register functions
-const mockLogin = vi.fn();
+const mockLogin = vi.fn(() => Promise.resolve(true));
 const mockRegister = vi.fn(() => Promise.resolve(true));
 
 //renders the pages with the auth context necessary, overriding login/register with mock functions
