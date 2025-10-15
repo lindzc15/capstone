@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from controllers import login_controller, api_status
+from controllers import login_controller, api_status, folders_controller, maps_controller, search_controller
 from container import Container
 
 
@@ -29,4 +29,7 @@ app.container = container
 #add controllers to the server
 app.include_router(login_controller.router)
 app.include_router(api_status.router)
+app.include_router(folders_controller.router)
+app.include_router(maps_controller.router)
+app.include_router(search_controller.router)
 
