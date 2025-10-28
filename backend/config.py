@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     database_host: str
     database_port: int = 5433
     database_name: str
+    google_maps_key: str
 
     #dynamically creates the database url & allows it to be referenced like an attribute
     @property

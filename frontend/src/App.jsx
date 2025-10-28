@@ -5,7 +5,7 @@ import NotFound from "./pages/NotFound"
 import Login from "./pages/Login"
 import SignUp from "./pages/SignUp"
 import Profile from "./pages/Profile"
-import Map from "./pages/Map"
+import MapPage from "./pages/Map"
 import Search from "./pages/Search"
 import MyFolders from "./pages/MyFolders"
 import { AuthContext } from "./context/AuthContext";
@@ -26,7 +26,7 @@ function App() {
           {/* Protected Routes */}
           <Route element ={<AuthRoute />}>
             <Route path="/profile" element={<Profile/>}/>
-            <Route path="/map" element={<Map/>}/>
+            <Route path="/map" element={<MapPage/>}/>
             <Route path="/search" element={<Search/>}/>
             <Route path="/myFolders" element={<MyFolders/>}/>
           </Route>

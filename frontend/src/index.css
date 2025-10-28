@@ -49,7 +49,7 @@ p {
   border-color: var(--main-brown);
   font-weight: bold;
   border-width: 2px;
-  min-width: 12em;
+  width: 12em;
 }
 
 .btn-primary:hover {
@@ -163,6 +163,27 @@ p {
   width: 100%;
   text-align: center;
 }
+
+#map {
+  height: 500px;
+  width: 100%;
+}
+
+.spinner {
+  color: var(--main-red) !important;
+}
+
+.card-color {
+  width: 18rem;
+  height: 10rem;
+  background-color: green;
+  border-radius: 6px;
+}
+
+.card-title {
+  text-align: center;
+}
+
 
 @media screen and (max-width: 991px) {
   .navbar {
