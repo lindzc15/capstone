@@ -43,7 +43,7 @@ p {
   font-style: normal;
 }
 
-.btn-primary {
+.btn-primary, .btn-secondary {
   color: var(--main-brown);
   background-color: var(--main-yellow);
   border-color: var(--main-brown);
@@ -52,17 +52,16 @@ p {
   width: 12em;
 }
 
-.btn-primary:hover {
+.btn-primary:hover, .btn-secondary:hover, #dropdownMenuButton[aria-expanded="true"] {
   background-color: var(--gen-background);
   color: var(--main-brown);
   border: 2px solid var(--main-brown);
 }
 
-.btn-primary:active {
+.btn-primary:active, .btn-secondary:active {
   background-color: var(--main-yellow) !important;
   border-color: var(--main-brown) !important;
 }
-
 
 .brown-txt, .navText {
   color: var(--main-brown);
@@ -181,8 +180,64 @@ p {
 }
 
 .card-title {
-  text-align: center;
+  text-align: left;
 }
+
+.details-card {
+  width: 30rem;
+  margin-left: 2em;
+  text-align: center;
+  height: 500px;
+}
+
+.card-text {
+  text-align: left;
+}
+.price-txt {
+  font-weight: bold;
+}
+
+.address-txt {
+  padding-top: 0;
+  margin-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.btn-secondary {
+  margin-top: 1em;
+}
+
+.save-btn {
+  margin-left: 1em;
+  min-width: 4em;
+}
+
+.btn-tertiary {
+  background-color: var(--gen-background);
+  color: var(--main-brown);
+  border: 2px solid var(--main-brown);
+}
+
+.btn-tertiary:hover {
+  color: var(--main-brown);
+  background-color: var(--main-yellow);
+  border-color: var(--main-brown);
+  font-weight: bold;
+  border-width: 2px;
+}
+
+.card-img {
+    display: inline-block;
+    width: 300px;
+    height: 220px;
+    margin: 5px;
+    background-position: center center;
+    background-size: cover;
+
+}
+
+
 
 
 @media screen and (max-width: 991px) {

@@ -101,7 +101,7 @@ const MainNav = () => {
                         </div>
                         <div className="modal-footer">
                         <button type="button" className="btn btn-modal" onClick={handleLogout}>Logout</button>
-                        <button type="button" className="btn btn-secondary" onClick={hideModal}>Cancel</button>
+                        <button type="button" className="btn btn-tertiary" onClick={hideModal}>Cancel</button>
                         </div>
                     </div>
                     </div>

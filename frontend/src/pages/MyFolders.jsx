@@ -15,9 +15,11 @@ function MyFolders () {
                         <h5 className="card-title">Card title</h5>
                     </div>
                     </div>
-                    <button type="submit" className="btn btn-primary mt-3 classicButton">
-                                Add Folder
-                    </button>
+                    <div class="fixed-bottom d-flex justify-content-center mb-5 pb-3">
+                        <button type="button" class="btn btn-primary classicButton">
+                            Add Folder
+                        </button>
+                    </div>
             </div>
         </MainLayout>
     )

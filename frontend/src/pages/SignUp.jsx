@@ -26,10 +26,12 @@ function SignUp() {
 
     //if logged in state changes, navigate to profile if logged in
     useEffect(() => {
-    if (isLoggedIn) {
-        nav("/profile");
+    if (isLoggedIn && (location.pathname === '/login' || location.pathname === '/signup')) {
+        console.log(`redirecting: ${isLoggedIn}, ${location.pathname}`);
+        nav('/profile');
     }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, location.pathname]);
+
 
     //when sign up buton clicked, attempt to register new user
     async function handleSubmit(e) {

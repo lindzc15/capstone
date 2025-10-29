@@ -13,11 +13,13 @@ function Login() {
     const formRef = useRef(null);
 
     //if logged in state changes to true, navigate to profile
-    useEffect (() => {
-        if (isLoggedIn) {
+    useEffect(() => {
+    if (isLoggedIn && (location.pathname === '/login' || location.pathname === '/signup')) {
+        console.log(`redirecting: ${isLoggedIn}, ${location.pathname}`);
         navigate('/profile');
-        }
-    }, [isLoggedIn])
+    }
+    }, [isLoggedIn, location.pathname]);
+
 
     //when login button clicked, attempt login
     async function handleSubmit(e) {
