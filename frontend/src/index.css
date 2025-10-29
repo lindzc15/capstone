@@ -67,6 +67,10 @@ p {
   color: var(--main-brown);
 }
 
+.navbar {
+  background-color: var(--gen-background);
+}
+
 .navbar-nav .nav-link.active {
   color: var(--main-brown);
   font-weight: 600;
@@ -173,7 +177,6 @@ p {
 }
 
 .card-color {
-  width: 18rem;
   height: 10rem;
   background-color: green;
   border-radius: 6px;
@@ -236,7 +239,25 @@ p {
     background-size: cover;
 
 }
+.card:hover {
+  cursor: pointer;
+}
 
+#search-input {
+  width: 50%;
+  margin: auto;
+  border: 1px solid var(--main-brown);
+  border-radius: 0.5rem;
+  padding: 0.5em;
+}
+
+footer {
+  margin-top: auto;
+  /* Add specific footer styles */
+  height: 60px; /* Example height */
+  padding: 10px;
+  text-align: center;
+}
 
 
 

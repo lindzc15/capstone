@@ -67,7 +67,7 @@ function SignUp() {
     }
     return (
         <MainLayout title="Sign Up | Let's Eat">
-            <div className="container d-flex flex-column flex-grow-1 justify-content-center">
+            <div className="container d-flex flex-column flex-grow-1">
                 <div className="row mx-auto mt-4 mb-4" style={{ maxWidth: '400px', width: '100%' }}>
                     <div className="text-center">
                         <h3 className="text-center mb-4 header-txt">Sign Up</h3>

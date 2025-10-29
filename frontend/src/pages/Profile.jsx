@@ -6,7 +6,7 @@ function Profile () {
     const {name, username, email} = useContext(AuthContext);
     return (
         <MainLayout title='My Profile'>
-            <div className="profile-div container d-flex flex-column flex-grow-1 justify-content-center">
+            <div className="profile-div container d-flex flex-column flex-grow-1">
             <h3 className="text-center mb-4 header-txt">My Profile</h3>
             <div className="card align-self-center">
                 <ul className="list-group list-group-flush">

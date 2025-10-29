@@ -29,7 +29,7 @@ const MainNav = () => {
 
     //nav bar will display differently for logged in vs logged out users
     return (
-        <nav className="navbar navbar-expand-lg sticky-top">
+        <nav className="navbar navbar-expand-lg sticky-top z-3">
             <div className="container-fluid">
                 <NavLink className="navbar-brand" to="/">
                     <img src="/logo.svg" alt="logo" width="80" height="60" className="icon"></img>

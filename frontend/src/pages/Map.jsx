@@ -140,7 +140,8 @@ function MapPage () {
                             defaultZoom={17}
                             defaultCenter={center}
                             fullscreenControl={false}
-                            streetViewControl={false}>
+                            streetViewControl={false}
+                            mapTypeControl={false}>
                         </Map>
                     </div>
                     {showDetails && (
