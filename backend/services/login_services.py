@@ -27,7 +27,7 @@ class LoginServices:
                 raise Exception("Invalid credentials")
         
 
-            token = LoginServices.create_token(user.username, user.full_name, user.email)
+            token = LoginServices.create_token(user.username, user.full_name, user.email, user.user_id)
             return token
         
         except Exception as e:
@@ -75,12 +75,13 @@ class LoginServices:
 
     #creates a token from user info
     @staticmethod
-    def create_token(username: str, name: str, email: str):
+    def create_token(username: str, name: str, email: str, id: str):
             #user payload to insert into the token
             user_payload = {
                 "username": username,
                 "name": name,
-                "email": email
+                "email": email,
+                "id": id
             }
 
             

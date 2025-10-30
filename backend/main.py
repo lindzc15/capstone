@@ -29,6 +29,6 @@ app.container = container
 #add controllers to the server
 app.include_router(login_controller.router)
 app.include_router(api_status.router)
-# app.include_router(folders_controller.router)
-app.include_router(maps_controller.router)
+app.include_router(folders_controller.router)
+# app.include_router(maps_controller.router)
 
