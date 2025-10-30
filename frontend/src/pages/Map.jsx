@@ -1,11 +1,20 @@
 import { AuthContext } from "../context/AuthContext";
 import MainLayout from "../layouts/MainLayout"
 import { useContext, useEffect, useRef, useState} from "react";
-import { Map, useMap, AdvancedMarker, Pin} from "@vis.gl/react-google-maps";
+import {
+  ControlPosition,
+  MapControl,
+  Map,
+  useMap,
+  useMapsLibrary,
+} from "@vis.gl/react-google-maps";
+
 
 
 function MapPage () {
     const {name, username, email} = useContext(AuthContext);
+
+    //to hold info for restaurant details to display in side panel
     const [loading, setLoading] = useState(true);
     const [showDetails, setShowDetails] = useState(false);
     const [locName, setLocName] = useState(null);
@@ -14,6 +23,9 @@ function MapPage () {
     const [photoSrc, setPhotoSrc] = useState(null);
     const [rating, setRating] = useState(null);
 
+    const [selectedPlace, setSelectedPlace] = useState(null);
+
+    //to simplify price range display
     const PRICE = {
         FREE: '',
         INEXPENSIVE: '$',
@@ -22,6 +34,7 @@ function MapPage () {
         VERY_EXPENSIVE: '$$$$'
     }
 
+    //to simplify rating display
     const RATING = {
         1: '⭐️',
         2: '⭐️⭐️',
@@ -30,13 +43,15 @@ function MapPage () {
         5: '⭐️⭐️⭐️⭐️⭐️'
     }
 
+    //uses map my saved map that displays food/drink establishments only
     const mapID = import.meta.env.VITE_MAP_ID;
     const map = useMap();
 
-    //default center of map to UVU
+    //default center of map to UVU in case user location can't be obtained
     const [center, setCenter] = useState({ lat: 40.261959, lng: -111.666412 }); 
 
 
+    //listens for clicks on map
     useEffect(() => {
         if(map) {
             map.addListener("click", displayPlaceInfo);
@@ -44,7 +59,8 @@ function MapPage () {
     }, [map])
 
 
-    //on mount, get user location, then set loading to false so spinner won't show
+    //on mount, get user location and center the map on their location
+    //once map has loaded remove spinner so map can be displayed
     useEffect (() => {
         async function mapSetUp() {
             if (navigator.geolocation) {
@@ -66,40 +82,46 @@ function MapPage () {
                 console.log("geolocation not supported");
                 setLoading(false);
             }
-
         }
         mapSetUp();
     }, [])
 
-    //when general map area clicked, close details panel
-    //when poi clicked, show details panel with info
+    //called when user clicks on map, to determine details panel status
     function displayPlaceInfo(event) {
+        //if user clicked a place, stop default info window from showing
+        //then get details of the place using the ID, to display info in details panel
         if (event.placeId) {
             event.stop();
             getPlaceDetails(event.placeId);
         }
+        //if the user clicked on the map outside an icon, close the details panel
         else {
             console.log(`map clicked:`, event.latLng);
             setShowDetails(false);
         }
     }
 
-    //fetches place info
+    //fetches place info to display in side panel
     async function getPlaceDetails(id) {
         const { Place } = await google.maps.importLibrary("places");
 
+        //creates place from id retrieved from click
         const place = new Place({
             id: id
         });
 
+        //fetches fields that will be displayed in side panel
         await place.fetchFields({ 
             fields: ['displayName', 'formattedAddress', 'location', 'googleMapsURI', 'photos', 'priceLevel', 'rating']
         });
 
+        //sets all restaurant info
+        //sets showDetails to true so that panel will open
         const photoUrl = place.photos?.[0]?.getURI({ maxWidth: 600 });
 
         const roundedRating = Math.round(place.rating)
 
+        //splits address to 2 lines
         const address = place.formattedAddress;
         const arrayAddress = address.split(/,(.+)/).map(p => p.trim());
 
@@ -115,7 +137,7 @@ function MapPage () {
 
 
 
-    //show loading spinner until map loads
+    //show a loading spinner until map loads
     if (loading) {
         return (
             <MainLayout>
@@ -127,6 +149,59 @@ function MapPage () {
             </MainLayout>
         )
     }
+
+    //fits the map to the bounds of the searched place
+    //then opens details panel with place info
+    const MapHandler = ({ place}) => {
+        const map = useMap();
+
+        useEffect(() => {
+            if (!map || !place) return;
+
+            if (place.geometry?.viewport) {
+            map.fitBounds(place.geometry?.viewport);
+            }
+        }, [map, place]);
+        return null;
+    };
+
+
+    //handles map searching
+    const PlaceAutocomplete = ({ onPlaceSelect }) => {
+        const [placeAutocomplete, setPlaceAutocomplete] = useState(null);
+        const inputRef = useRef(null);
+        const places = useMapsLibrary("places");
+
+        useEffect(() => {
+            if (!places || !inputRef.current) return;
+
+            //limit search to restaurants/cafes/bars only
+            //defaults to bias on map center
+            const options = {
+            fields: ["geometry", "name", "formatted_address", "place_id"],
+            types: ["restaurant", "cafe", "bar"],
+            };
+
+            setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));
+        }, [places]);
+        useEffect(() => {
+            if (!placeAutocomplete) return;
+
+            placeAutocomplete.addListener("place_changed", () => {
+                //when place changed, set new place so map can adjust view
+                //then call functions to open side panel and fetch details
+                const place = placeAutocomplete.getPlace();
+                setShowDetails(true);
+                getPlaceDetails(place.place_id);
+                onPlaceSelect(placeAutocomplete.getPlace());
+            });
+        }, [onPlaceSelect, placeAutocomplete]);
+        return (
+            <div className="autocomplete-container">
+            <input ref={inputRef} />
+            </div>
+        );
+    };
 
 
     return (
@@ -143,6 +218,12 @@ function MapPage () {
                             streetViewControl={false}
                             mapTypeControl={false}>
                         </Map>
+                        <MapControl position={ControlPosition.TOP_LEFT}>
+                            <div className="autocomplete-control">
+                            <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
+                            </div>
+                        </MapControl>
+                        <MapHandler place={selectedPlace}/>
                     </div>
                     {showDetails && (
                         <div className="card details-card shadow-lg p-3 mb-5 bg-body-tertiary rounded brown-txt">

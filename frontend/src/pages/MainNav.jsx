@@ -65,9 +65,6 @@ const MainNav = () => {
                                     <NavLink className="nav-link navText header-txt" to="/map">Map</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link navText header-txt" to="/search">Search</NavLink>
-                                </li>
-                                <li className="nav-item">
                                     <NavLink className="nav-link navText header-txt" to="/myFolders">My Folders</NavLink>
                                 </li>
                                 <li className="nav-item">
