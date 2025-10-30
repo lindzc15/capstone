@@ -24,4 +24,21 @@ class FolderRepository:
         except Exception as e:
             self.db.rollback()
             raise Exception(f"Folders not found")
+        
+
+    #add new folder to the database, using user id sent in
+    def add_folder_db(self, folder: Folder) -> bool:
+        try:
+            #add new folder to the database, commit, refresh to ensure up to date data, and return 
+            self.db.add(folder)
+            print('made it here')
+            self.db.commit()
+            print('and here')
+            self.db.refresh(folder)
+            print('here?')
+            return
+        except:
+            #rollback if any errors creating new account
+            self.db.rollback()
+            raise Exception("Error creating new folder")
     

@@ -12,9 +12,16 @@ class FolderInfo(BaseModel):
     color: Optional[str] = None
     user_id: int
 
-    class Config:
-        orm_mode = True
 
 class FolderResponse(BaseModel):
     success: bool
     folders_info: List[FolderInfo]
+
+
+class AddFolderRequest(BaseModel):
+    folder_name: str
+    color: Optional[str] = None
+    jwt_token: str
+
+class AddFolderResponse(BaseModel):
+    success: bool
