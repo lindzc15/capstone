@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 
 
-from schemas.folder_schema import FolderInfo, FolderRequest,  FolderResponse, AddFolderRequest, AddFolderResponse
+from schemas.folder_schema import FolderInfo, FolderRequest,  FolderResponse, AddFolderRequest, AddResponse, AddRestaurantRequest
 from schemas.message_schema import MessageResponse
 from services.login_services import LoginServices
 from services.folder_services import FolderServices
@@ -34,16 +34,31 @@ async def login(jwt: FolderRequest, folder_service: FolderServices = Depends(Pro
 #returning user logging in
 #uses dependency injection to grab needed services
 #uses Depends so FastApi know it needs dependency, Provide to point to the location of the service
-@router.post("/add", response_model=AddFolderResponse)
+@router.post("/add", response_model=AddResponse)
 @inject
 async def login(request: AddFolderRequest, folder_service: FolderServices = Depends(Provide[Container.folder_service])):
     try:
         #tries to get jwt token from services, if success return it and success message
         folder_service.add_folder(request.jwt_token, request.folder_name, request.color)
         print('made it hereee')
-        return AddFolderResponse(success=True)
+        return AddResponse(success=True)
     except Exception as e:
         #on failure, send back 401 error, proper authentication not acquired
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+
+#returning user logging in
+#uses dependency injection to grab needed services
+#uses Depends so FastApi know it needs dependency, Provide to point to the location of the service
+@router.post("/addRestaurant", response_model=AddResponse)
+@inject
+async def login(request: AddRestaurantRequest, folder_service: FolderServices = Depends(Provide[Container.folder_service])):
+    try:
+        folder_service.add_restaurant(request.folder_id, request.restaurant_id, request.rest_name, request.avg_rating, request.loc, request.main_photo_url)
+        return AddResponse(success=True)
+    except Exception as e:
+        #on failure, send back 500 error, server side error occurred
         raise HTTPException(status_code=500, detail=str(e))
     
 

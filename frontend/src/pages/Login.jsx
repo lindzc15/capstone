@@ -15,6 +15,7 @@ function Login() {
     //if logged in state changes to true, navigate to profile
     useEffect(() => {
     if (isLoggedIn && (location.pathname === '/login' || location.pathname === '/signup')) {
+        setError(null)
         console.log(`redirecting: ${isLoggedIn}, ${location.pathname}`);
         navigate('/profile');
     }
@@ -37,6 +38,7 @@ function Login() {
         //check if any fields are invalid, stopping propogation if so
         if(!form.checkValidity()) {
             e.stopPropagation();
+            return;
         }
 
         else {
@@ -46,7 +48,8 @@ function Login() {
             //if user logged in, state change will navigate to profile
             //if not, it will display error message
             if(loggedIn) {
-                ("Logging in")
+                ("Logging in");
+                nav("/profile");
             }
             else {
                 setError("Invalid Credentials");

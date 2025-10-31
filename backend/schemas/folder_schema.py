@@ -23,5 +23,14 @@ class AddFolderRequest(BaseModel):
     color: Optional[str] = None
     jwt_token: str
 
-class AddFolderResponse(BaseModel):
+class AddResponse(BaseModel):
     success: bool
+
+class AddRestaurantRequest(BaseModel):
+    folder_id: str
+    restaurant_id: str
+    rest_name: str
+    loc: str
+    price_range: str
+    avg_rating: float
+    main_photo_url: str

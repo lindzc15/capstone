@@ -139,6 +139,7 @@ function MapPage () {
             id: id
         });
 
+        console.log(place.id);
         //fetches fields that will be displayed in side panel
         await place.fetchFields({ 
             fields: ['displayName', 'formattedAddress', 'location', 'googleMapsURI', 'photos', 'priceLevel', 'rating']

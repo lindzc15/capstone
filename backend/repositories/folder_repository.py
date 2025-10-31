@@ -1,5 +1,5 @@
 import json
-from models.user_model import Folder
+from models.user_model import Folder, RestaurantFolders, RestaurantInfo
 from schemas.folder_schema import FolderInfo
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session
@@ -41,4 +41,25 @@ class FolderRepository:
             #rollback if any errors creating new account
             self.db.rollback()
             raise Exception("Error creating new folder")
+        
+
+    def add_restaurant_db(self, restaurant: RestaurantInfo) -> None:
+        try:
+            self.db.add(restaurant)
+            self.db.commit()
+            self.db.refresh(restaurant)
+            return
+        except:
+            self.db.rollback()
+            raise Exception("Error creating restaurant entry")
+
     
+    def add_rest_folder_relation(self, relationship: RestaurantFolders):
+        try:
+            self.db.add(relationship)
+            self.db.commit()
+            self.db.refresh(relationship)
+            return
+        except:
+            self.db.rollback()
+            raise Exception("Error connecting restaurant to folder")

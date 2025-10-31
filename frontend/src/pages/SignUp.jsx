@@ -44,6 +44,7 @@ function SignUp() {
         //check if any fields are invalid, stopping propogation if so
         if(!form.checkValidity()) {
             e.stopPropagation();
+            return;
         }
         
         //if passwords don't match, display error message
@@ -59,6 +60,7 @@ function SignUp() {
             //if unsuccessful, display error
             if (registered) {
                 console.log("logging in");
+                nav("/profile");
             }
             else {
                 setError("Account registration failed");
