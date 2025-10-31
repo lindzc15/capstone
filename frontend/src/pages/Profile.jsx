@@ -3,7 +3,17 @@ import MainLayout from "../layouts/MainLayout"
 import { useContext } from "react";
 
 function Profile () {
-    const {name, username, email} = useContext(AuthContext);
+    const {name, username, email, isLoggedIn} = useContext(AuthContext);
+
+    //if token expires, log user out
+    useEffect(() => {
+            if (!isLoggedIn) {
+                setError(null)
+                console.log(`redirecting: ${isLoggedIn}`);
+                navigate('/login');
+            }
+    }, [isLoggedIn]);
+    
     return (
         <MainLayout title='My Profile'>
             <div className="profile-div container d-flex flex-column flex-grow-1">
