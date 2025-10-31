@@ -178,7 +178,6 @@ p {
 
 .card-color {
   height: 10rem;
-  background-color: green;
   border-radius: 6px;
 }
 
@@ -297,7 +296,18 @@ footer {
   cursor: pointer;
 }
 
+#myColor {
+  background-color: white;
+}
 
+.custom-alert {
+  z-index: 100;
+  background-color: var(--main-yellow) !important;
+  color: var(--main-brown) !important;
+  opacity: 0.9;
+  margin-top: 1em;
+  width: auto;
+}
 
 @media screen and (max-width: 991px) {
   .navbar {

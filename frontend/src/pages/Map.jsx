@@ -179,7 +179,7 @@ function MapPage () {
             //defaults to bias on map center
             const options = {
             fields: ["geometry", "name", "formatted_address", "place_id"],
-            types: ["restaurant", "cafe", "bar"],
+            types: ["restaurant", "bar", "cafe", "bakery", "food"],
             };
 
             setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));
