@@ -41,7 +41,7 @@ async def login(request: AddFolderRequest, folder_service: FolderServices = Depe
         #tries to get jwt token from services, if success return it and success message
         folder_service.add_folder(request.jwt_token, request.folder_name, request.color)
         print('made it hereee')
-        return AddResponse(success=True)
+        return AddResponse(success=True, message="")
     except Exception as e:
         #on failure, send back 401 error, proper authentication not acquired
         raise HTTPException(status_code=500, detail=str(e))

@@ -1,6 +1,7 @@
 import { AuthContext } from "../context/AuthContext";
 import MainLayout from "../layouts/MainLayout"
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+
 
 function Profile () {
     const {name, username, email, isLoggedIn} = useContext(AuthContext);
@@ -13,7 +14,7 @@ function Profile () {
                 navigate('/login');
             }
     }, [isLoggedIn]);
-    
+
     return (
         <MainLayout title='My Profile'>
             <div className="profile-div container d-flex flex-column flex-grow-1">

@@ -1,6 +1,7 @@
 import { AuthContext } from "../context/AuthContext";
 import MainLayout from "../layouts/MainLayout"
 import { useContext, useEffect, useRef, useState} from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ControlPosition,
   MapControl,
@@ -12,7 +13,7 @@ import {
 
 
 function MapPage () {
-    const {name, username, email} = useContext(AuthContext);
+    const {name, username, email, isLoggedIn} = useContext(AuthContext);
     const [folders, setFolders] = useState([]);
     const [selectedFolder, setSelectedFolder] = useState(null);
 
@@ -26,6 +27,7 @@ function MapPage () {
     const [rating, setRating] = useState(null);
 
     const [selectedPlace, setSelectedPlace] = useState(null);
+    const navigate = useNavigate();
 
 
     //if token expires, log user out
