@@ -51,12 +51,15 @@ async def login(request: AddFolderRequest, folder_service: FolderServices = Depe
 #returning user logging in
 #uses dependency injection to grab needed services
 #uses Depends so FastApi know it needs dependency, Provide to point to the location of the service
-@router.post("/addRestaurant", response_model=AddResponse)
+@router.post("/addrestaurant", response_model=AddResponse)
 @inject
 async def login(request: AddRestaurantRequest, folder_service: FolderServices = Depends(Provide[Container.folder_service])):
     try:
-        folder_service.add_restaurant(request.folder_id, request.restaurant_id, request.rest_name, request.avg_rating, request.loc, request.main_photo_url)
-        return AddResponse(success=True)
+        added = folder_service.add_restaurant(request.folder_id, request.restaurant_id, request.rest_name, request.price_range, request.avg_rating, request.loc, request.main_photo_url)
+        if added:
+            return AddResponse(success=True, message="")
+        else:
+            return AddResponse(success=False, message="Duplicate entry")
     except Exception as e:
         #on failure, send back 500 error, server side error occurred
         raise HTTPException(status_code=500, detail=str(e))

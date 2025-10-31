@@ -165,6 +165,7 @@ function MapPage () {
         setPhotoSrc(photoUrl);
 
         console.log(place.rating);
+        console.log(photoUrl);
     }
 
 
@@ -224,6 +225,7 @@ function MapPage () {
                 //when place changed, set new place so map can adjust view
                 //then call functions to open side panel and fetch details
                 const place = placeAutocomplete.getPlace();
+                console.log(place.place_id);
                 setShowDetails(true);
                 getPlaceDetails(place.place_id);
                 onPlaceSelect(placeAutocomplete.getPlace());

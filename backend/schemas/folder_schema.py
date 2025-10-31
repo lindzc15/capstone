@@ -25,9 +25,10 @@ class AddFolderRequest(BaseModel):
 
 class AddResponse(BaseModel):
     success: bool
+    message: Optional[str]
 
 class AddRestaurantRequest(BaseModel):
-    folder_id: str
+    folder_id: int
     restaurant_id: str
     rest_name: str
     loc: str

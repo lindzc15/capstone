@@ -52,7 +52,7 @@ class RestaurantInfo(Base):
     rest_name = Column(String(100), nullable=False)
     avg_rating = Column(Numeric(2,1))
     loc = Column(String(255), nullable=False)
-    main_photo_url = Column(String(255))
+    main_photo_url = Column(String(1000))
 
     folders = relationship(
         "Folder",
@@ -74,5 +74,9 @@ class RestaurantFolders(Base):
     __tablename__ = "restaurant_folders"
     folder_id = Column(Integer, ForeignKey("folders.folder_id"), nullable=False, primary_key=True)
     restaurant_id = Column(String, ForeignKey("restaurant_info.restaurant_id"), nullable=False, primary_key=True)
+
+    def __init__(self, folder_id: int, restaurant_id: str):
+        self.folder_id = folder_id
+        self.restaurant_id = restaurant_id
 
     

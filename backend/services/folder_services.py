@@ -46,18 +46,23 @@ class FolderServices:
         
 
 
-    def add_restaurant(self, folder_id: str, restaurant_id: str, price_range: str, rest_name: str, avg_rating: float, loc: str, main_photo_url: str):   
+    def add_restaurant(self, folder_id: str, restaurant_id: str, rest_name: str, price_range: str, avg_rating: float, loc: str, main_photo_url: str) -> bool:   
         try: 
             #create restaurant with given fields
             restaurant = RestaurantInfo(restaurant_id, price_range, rest_name, avg_rating, loc, main_photo_url)
 
-            #add restaurant to db, restaurant info table
+            #add restaurant to db if not already in it, restaurant info table
             self.folder_repository.add_restaurant_db(restaurant)
 
             #add relationship to db, restaurant_folders
             relationship = RestaurantFolders(folder_id, restaurant_id)
-            self.folder_repository.add_rest_folder_relation(relationship)
-            return
+            relation_added = self.folder_repository.add_rest_folder_relation(relationship)
+
+            #relationship already exists, let user know about duplicate in folder
+            if not relation_added:
+                return False
+
+            return True
         
         except Exception as e:
             raise Exception(f"Failed to add restaurant to folder: {str(e)}")
