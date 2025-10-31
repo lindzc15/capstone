@@ -45,3 +45,6 @@ async def login(request: AddFolderRequest, folder_service: FolderServices = Depe
     except Exception as e:
         #on failure, send back 401 error, proper authentication not acquired
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+

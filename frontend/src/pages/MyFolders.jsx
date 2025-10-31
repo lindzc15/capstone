@@ -75,6 +75,12 @@ function MyFolders () {
     return (
         <MainLayout title='My Folders'>
                 <h3 className="text-center mb-4 header-txt">My Folders</h3>
+                        {alert && (
+                            <div className="alert custom-alert position-absolute alert-below-header" role="alert">
+                                Folder added!
+                            </div>
+                        )}
+
                 <div className="container-fluid">
                         <div>
                             <FolderAPI alert={alert}></FolderAPI>
@@ -116,20 +122,13 @@ function MyFolders () {
                         </div>
                         <div className="modal-footer">
                         <button type="button" className="btn btn-modal" onClick={addFolder}>Add</button>
-                        <button type="button" className="btn btn-tertiary" onClick={hideModal}>Cancel</button>
+                        <button type="button" className="btn btn-tertiary cancel-btn" onClick={hideModal}>Cancel</button>
                         </div>
                     </div>
                     </div>
                 </div>
             )}
-
-            {/* shows filter applied alert when button is pressed */}
-            {alert && (
-                <div className="alert custom-alert position-fixed bottom-50 start-50 translate-middle-x" role="alert">
-                    Folder added!
-                </div>
-            )}
-            </div>
+            </div> 
         </MainLayout>
     )
 };

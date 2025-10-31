@@ -43,7 +43,7 @@ p {
   font-style: normal;
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary, .btn-secondary, .btn-tertiary {
   color: var(--main-brown);
   background-color: var(--main-yellow);
   border-color: var(--main-brown);
@@ -52,13 +52,13 @@ p {
   width: 12em;
 }
 
-.btn-primary:hover, .btn-secondary:hover, #dropdownMenuButton[aria-expanded="true"] {
+.btn-primary:hover, .btn-secondary:hover {
   background-color: var(--gen-background);
   color: var(--main-brown);
   border: 2px solid var(--main-brown);
 }
 
-.btn-primary:active, .btn-secondary:active {
+.btn-primary:active, .btn-secondary:active, .btn-tertiary:active, .btn-tertiary:focus {
   background-color: var(--main-yellow) !important;
   border-color: var(--main-brown) !important;
 }
@@ -215,11 +215,6 @@ p {
   min-width: 4em;
 }
 
-.btn-tertiary {
-  background-color: var(--gen-background);
-  color: var(--main-brown);
-  border: 2px solid var(--main-brown);
-}
 
 .btn-tertiary:hover {
   color: var(--main-brown);
@@ -308,6 +303,23 @@ footer {
   margin-top: 1em;
   width: auto;
 }
+
+.classicButton {
+  height: 2.75em;
+}
+
+.alert-below-header {
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000; 
+    position: absolute; 
+}
+
+.cancel-btn {
+  width: 8em;
+}
+
 
 @media screen and (max-width: 991px) {
   .navbar {

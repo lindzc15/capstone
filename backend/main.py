@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from controllers import login_controller, api_status, folders_controller, maps_controller
+from controllers import login_controller, api_status, folders_controller
 from container import Container
 
 
@@ -23,7 +23,7 @@ app.add_middleware(
 
 #add container for dependency injection
 container = Container()
-container.wire(modules=[login_controller, maps_controller, folders_controller])
+container.wire(modules=[login_controller, folders_controller])
 app.container = container
 
 #add controllers to the server

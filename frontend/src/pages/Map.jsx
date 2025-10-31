@@ -13,6 +13,8 @@ import {
 
 function MapPage () {
     const {name, username, email} = useContext(AuthContext);
+    const [folders, setFolders] = useState([]);
+    const [selectedFolder, setSelectedFolder] = useState(null);
 
     //to hold info for restaurant details to display in side panel
     const [loading, setLoading] = useState(true);
@@ -61,6 +63,7 @@ function MapPage () {
 
     //on mount, get user location and center the map on their location
     //once map has loaded remove spinner so map can be displayed
+    //also get folder info to display in drop downs
     useEffect (() => {
         async function mapSetUp() {
             if (navigator.geolocation) {
@@ -83,7 +86,33 @@ function MapPage () {
                 setLoading(false);
             }
         }
+
+        async function getFolders() {
+            try {
+                const jwt_token = JSON.parse(localStorage.getItem('token'));
+                const response = await fetch("http://localhost:8080/api/folders", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            jwt_token: jwt_token
+                        }),
+                        // Adding headers to the request
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8"
+                        }
+                }) 
+                if (!response.ok) {
+                    throw new Error("Failed to fetch folders");
+                }
+                const data = await response.json();
+                setFolders(data.folders_info);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
         mapSetUp();
+        getFolders();
     }, [])
 
     //called when user clicks on map, to determine details panel status
@@ -246,15 +275,35 @@ function MapPage () {
                                 <p className="card-text address-txt">{address[0] || 'Address unavailable'}</p>
                                 <p className="card-text address-txt">{address[1] || ''}</p>
                                 <div className="container d-flex flex-row flex-grow-1 justify-content-center">  
-                                    <div className="dropdown">
-                                        <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Select Folder
+                                    <div className="dropdown mb-3">
+                                        <button
+                                            className="btn btn-secondary dropdown-toggle classicButton btn-tertiary"
+                                            type="button"
+                                            id="folderDropdown"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        >
+                                            {selectedFolder ? selectedFolder.folder_name : "Select a folder"}
                                         </button>
-                                        <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                            <a className="dropdown-item" href="#">Action</a>
-                                            <a className="dropdown-item" href="#">Another action</a>
-                                            <a className="dropdown-item" href="#">Something else here</a>
-                                        </div>
+                                        <ul className="dropdown-menu" aria-labelledby="folderDropdown">
+                                            {folders.length > 0 ? (
+                                            folders.map((folder, index) => (
+                                                <li key={index}>
+                                                <button
+                                                    className="dropdown-item"
+                                                    type="button"
+                                                    onClick={() => setSelectedFolder(folder)}
+                                                >
+                                                    {folder.folder_name || folder.folder_id}
+                                                </button>
+                                                </li>
+                                            ))
+                                            ) : (
+                                            <li>
+                                                <span className="dropdown-item-text text-muted">No folders available</span>
+                                            </li>
+                                            )}
+                                        </ul>
                                     </div>
                                     <button type="submit" className="btn save-btn btn-primary mt-3 classicButton">
                                         Save
