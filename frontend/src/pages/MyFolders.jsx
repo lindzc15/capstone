@@ -1,15 +1,27 @@
 import { AuthContext } from "../context/AuthContext";
 import MainLayout from "../layouts/MainLayout"
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import FolderAPI from "./APIs/FolderAPI";
 
 function MyFolders () {
-    const {name, username, email} = useContext(AuthContext);
+    const {name, username, email, isLoggedIn} = useContext(AuthContext);
     const formRef = useRef(null);
     const [error, setError] = useState("");
     const [color, setColor] = useState('#DB1C07');
     const [folderName, setFolderName] = useState(null);
     const [alert, setAlert] = useState(false);
+    const navigate = useNavigate();
+
+
+    //if token expires, log user out
+    useEffect(() => {
+        if (!isLoggedIn) {
+            setError(null)
+            console.log(`redirecting: ${isLoggedIn}`);
+            navigate('/login');
+        }
+    }, [isLoggedIn]);
 
     //tracks state of modal to determine if it should be displayed or not
     const [modal, setModal] = useState(false);

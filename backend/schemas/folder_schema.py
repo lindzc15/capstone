@@ -35,3 +35,18 @@ class AddRestaurantRequest(BaseModel):
     price_range: str
     avg_rating: float
     main_photo_url: str
+
+class FolderContentsRequest(BaseModel):
+    folder_id: int
+
+class RestaurantInfoSchema(BaseModel):
+    restaurant_id: str
+    rest_name: str
+    loc: str
+    price_range: str
+    avg_rating: float
+    main_photo_url: str
+
+class FolderContentsResponse(BaseModel):
+    success: bool
+    contents: List[RestaurantInfoSchema]

@@ -27,6 +27,16 @@ function MapPage () {
 
     const [selectedPlace, setSelectedPlace] = useState(null);
 
+
+    //if token expires, log user out
+    useEffect(() => {
+        if (!isLoggedIn) {
+            setError(null)
+            console.log(`redirecting: ${isLoggedIn}`);
+            navigate('/login');
+        }
+    }, [isLoggedIn]);
+
     //to simplify price range display
     const PRICE = {
         FREE: '',

@@ -1,6 +1,6 @@
 import json
 from models.user_model import Folder, RestaurantFolders, RestaurantInfo
-from schemas.folder_schema import FolderInfo
+from schemas.folder_schema import FolderInfo, RestaurantInfoSchema
 from sqlalchemy import select, func, and_
 from sqlalchemy.orm import Session
 from typing import Optional, Tuple
@@ -72,7 +72,6 @@ class FolderRepository:
 
             #restaurant already in folder
             if match_realtionship_count > 0:
-                print('DUPLICATE DUPLICATE DUPLICATE DUPLICATE DUPLICATE DUPLICATE DUPLICATE DUPLICATE DUPLICATE')
                 return False
             self.db.add(relationship)
             self.db.commit()
@@ -82,3 +81,33 @@ class FolderRepository:
             self.db.rollback()
             print("DB Error:", e)
             raise Exception("Error connecting restaurant to folder")
+        
+    
+    def get_folder_contents(self, folder_id: int) -> list[RestaurantInfo]:
+        try:
+            stmt = select(Folder).where(Folder.folder_id == folder_id)
+            folder_count = self.db.scalar(select(func.count()).select_from(Folder).where(Folder.folder_id == folder_id))
+            print(folder_count)
+            if folder_count == 0:
+                raise Exception("Folder does not exist")
+            
+            stmt = select(RestaurantFolders.restaurant_id).where(RestaurantFolders.folder_id == folder_id)
+            restaurant_ids = self.db.scalars(stmt).all()
+
+            if not restaurant_ids:
+                return []
+        
+            stmt2 = select(RestaurantInfo).filter(RestaurantInfo.restaurant_id.in_(restaurant_ids))
+            restaurants = self.db.scalars(stmt2).all()
+            restaurant_infos = [RestaurantInfoSchema(restaurant_id=str(restaurant.restaurant_id), 
+                                               rest_name=str(restaurant.rest_name), 
+                                               loc=str(restaurant.loc), 
+                                               price_range=str(restaurant.price_range),
+                                               avg_rating=float(restaurant.avg_rating),
+                                               main_photo_url=str(restaurant.main_photo_url))
+                                               for restaurant in restaurants]
+            return restaurant_infos
+        except Exception as e:
+            self.db.rollback()
+            print("DB Error:", e)
+            raise Exception("Error finding folder contents: ", e)

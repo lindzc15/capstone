@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 
 
-from schemas.folder_schema import FolderInfo, FolderRequest,  FolderResponse, AddFolderRequest, AddResponse, AddRestaurantRequest
+from schemas.folder_schema import FolderInfo, FolderRequest,  FolderResponse, AddFolderRequest, AddResponse, AddRestaurantRequest, FolderContentsRequest, FolderContentsResponse, RestaurantInfoSchema
 from schemas.message_schema import MessageResponse
 from services.login_services import LoginServices
 from services.folder_services import FolderServices
@@ -60,6 +60,17 @@ async def login(request: AddRestaurantRequest, folder_service: FolderServices = 
             return AddResponse(success=True, message="")
         else:
             return AddResponse(success=False, message="Duplicate entry")
+    except Exception as e:
+        #on failure, send back 500 error, server side error occurred
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+@router.post("/contents", response_model=FolderContentsResponse)
+@inject
+async def login(request: FolderContentsRequest, folder_service: FolderServices = Depends(Provide[Container.folder_service])):
+    try:
+        restaurants = folder_service.get_folder_contents(request.folder_id)
+        return FolderContentsResponse(success=True, contents=restaurants)
     except Exception as e:
         #on failure, send back 500 error, server side error occurred
         raise HTTPException(status_code=500, detail=str(e))

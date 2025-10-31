@@ -39,7 +39,7 @@ const FolderAPI = ({alert}) => {
             }
             catch (error) {
                 console.log(error);
-                setError("No folders found");
+                    setError("No folders found");
             }
             finally {
                 setLoading(false);

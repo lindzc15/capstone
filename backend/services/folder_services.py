@@ -3,6 +3,7 @@ import jwt
 import datetime
 from repositories.folder_repository import FolderRepository
 from models.user_model import Folder, RestaurantFolders, RestaurantInfo
+from schemas.folder_schema import RestaurantInfoSchema
 from config import settings
 
 class FolderServices:
@@ -66,5 +67,13 @@ class FolderServices:
         
         except Exception as e:
             raise Exception(f"Failed to add restaurant to folder: {str(e)}")
+        
+    
+    def get_folder_contents(self, folder_id: int) -> list[RestaurantInfoSchema]:
+        try:
+            restaurant_list = self.folder_repository.get_folder_contents(folder_id)
+            return restaurant_list
+        except Exception as e:
+            raise Exception(f"Failed to retrieve folder contents: {str(e)}")
         
     
