@@ -155,12 +155,15 @@ function MapPage () {
         const arrayAddress = address.split(/,(.+)/).map(p => p.trim());
 
 
+
         setShowDetails(true);
         setLocName(place.displayName);
         setAddress(arrayAddress);
         setPrice(PRICE[place.priceLevel]);
         setRating(RATING[roundedRating]);
         setPhotoSrc(photoUrl);
+
+        console.log(place.rating);
     }
 
 

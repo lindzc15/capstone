@@ -24,7 +24,7 @@ config.set_main_option("sqlalchemy.url", settings.database_url)
 from models.base_model import Base
 target_metadata = Base.metadata
 
-from models.user_model import User
+from models.user_model import User, Folder, RestaurantInfo
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
