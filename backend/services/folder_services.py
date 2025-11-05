@@ -10,7 +10,7 @@ class FolderServices:
     def __init__(self, folder_repository):
         self.folder_repository = folder_repository
 
-    #sends info to repository, validates that user exists, and then gets jwt token
+    #sends info to repository, validates that user exists, and then gets that users folders
     def get_folders(self, jwt_token: str):   
         try: 
             payload = jwt.decode(jwt_token, settings.secret_key, settings.algorithm)
@@ -27,7 +27,7 @@ class FolderServices:
             raise Exception(f"Failed to retrieve folders: {str(e)}")
         
     
-        #sends info to repository, validates that user exists, and then gets jwt token
+    #sends info to repository, validates that user exists, then adds folder connected to that user
     def add_folder(self, jwt_token: str, folder_name: str, color: str):   
         try: 
             payload = jwt.decode(jwt_token, settings.secret_key, settings.algorithm)
@@ -47,6 +47,7 @@ class FolderServices:
         
 
 
+    #adds a resturant to the db, then adds the relationship between folder and restaurant
     def add_restaurant(self, folder_id: str, restaurant_id: str, rest_name: str, price_range: str, avg_rating: float, loc: str, main_photo_url: str) -> bool:   
         try: 
             #create restaurant with given fields
@@ -69,6 +70,7 @@ class FolderServices:
             raise Exception(f"Failed to add restaurant to folder: {str(e)}")
         
     
+    #gets all of the restuarants in the specified folder
     def get_folder_contents(self, folder_id: int) -> list[RestaurantInfoSchema]:
         try:
             restaurant_list = self.folder_repository.get_folder_contents(folder_id)

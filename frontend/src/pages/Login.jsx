@@ -49,7 +49,7 @@ function Login() {
             //if not, it will display error message
             if(loggedIn) {
                 ("Logging in");
-                nav("/profile");
+                navigate("/profile");
             }
             else {
                 setError("Invalid Credentials");

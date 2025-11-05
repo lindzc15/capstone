@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
+//gets folders from API then dynamically creates display cards for each 
 const FolderAPI = ({alert}) => {
     const [folders, setFolders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -13,6 +14,7 @@ const FolderAPI = ({alert}) => {
 
     useEffect(() => {
         const jwt_token = JSON.parse(localStorage.getItem('token'));
+        //fetch folders
         const fetchFolders = async () => {
             setLoading(true);
             setError(null);
@@ -28,13 +30,11 @@ const FolderAPI = ({alert}) => {
                             "Content-type": "application/json; charset=UTF-8"
                         }
                 }) 
-                console.log('made it here');
                 if (!response.ok) {
                     throw new Error("Failed to fetch folders");
                 }
+                //sets folder info
                 const data = await response.json();
-                console.log(data);
-                console.log(data.folders_info);
                 setFolders(data.folders_info);
             }
             catch (error) {
@@ -67,6 +67,7 @@ const FolderAPI = ({alert}) => {
 
     return (
         <div className="row ms-auto me-auto">
+        {/* For each folder, map the info to the correct place on the card */}
             {folders.map((folder) => (
                 <div className="col-md-4 col-lg-3 d-flex justify-content-center" key={folder.folder_id}>
                     <div className="card shadow-lsm bg-body-tertiary rounded m-3 flex-grow-1 cursor">

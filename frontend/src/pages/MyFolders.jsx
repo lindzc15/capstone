@@ -36,6 +36,7 @@ function MyFolders () {
         setModal(true);
     }
 
+    //handle add folder button pressed
     async function addFolder(e) {
         e.preventDefault();
 
@@ -54,6 +55,7 @@ function MyFolders () {
         else {
             console.log('entered api');
             try {
+                //try to add folder
                 const jwt_token = JSON.parse(localStorage.getItem('token'));
                 const response = await fetch("http://localhost:8080/api/folders/add", {
                         method: "POST",
@@ -70,6 +72,7 @@ function MyFolders () {
                 if (!response.ok) {
                     throw new Error("Failed to fetch folders");
                 }
+                //close form, show success alert
                 const data = await response.json();
                 hideModal();
                 setAlert(true);

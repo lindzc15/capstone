@@ -8,13 +8,13 @@ from typing import Optional, Tuple
 from db.db import get_db_session
 
 
-#database functions concerning authentication
+#database functions concerning folders
 class FolderRepository:
     def __init__(self, db: Session):
         self.db = db
 
 
-    #retrieves user from database, returning user on success, returning error message on failure
+    #retrieves all folders from database
     def get_folders(self, user_id: str) -> list[Folder]:
         try: 
             stmt = select(Folder).where(Folder.user_id == user_id)
@@ -26,7 +26,7 @@ class FolderRepository:
             raise Exception(f"Folders not found")
         
 
-    #add new folder to the database, using user id sent in
+    #add new folder to the database
     def add_folder_db(self, folder: Folder) -> bool:
         try:
             #add new folder to the database, commit, refresh to ensure up to date data, and return 
@@ -40,11 +40,12 @@ class FolderRepository:
             raise Exception("Error creating new folder")
         
 
+    #add new restuarnt to the database
     def add_restaurant_db(self, restaurant: RestaurantInfo) -> None:
         try:
             match_rest_count = self.db.scalar(select(func.count()).select_from(RestaurantInfo)
                                                       .where(RestaurantInfo.restaurant_id == restaurant.restaurant_id))
-            #restaurant already in database, don't add
+            #restaurant already in database, don't add, can just add a new folder/restaurant relationship
             if match_rest_count > 0:
                 return
             
@@ -58,6 +59,8 @@ class FolderRepository:
             raise Exception(f"Error creating restaurant entry")
 
     
+    #adds a relationship between a folder and a restaurant to the db
+    #allows multiple folders to contain the same restaurant
     def add_rest_folder_relation(self, relationship: RestaurantFolders) -> bool:
         try:
             match_realtionship_count = self.db.scalar(
@@ -70,7 +73,7 @@ class FolderRepository:
                     )
                 )
 
-            #restaurant already in folder
+            #restaurant already in folder, return false
             if match_realtionship_count > 0:
                 return False
             self.db.add(relationship)
@@ -83,20 +86,25 @@ class FolderRepository:
             raise Exception("Error connecting restaurant to folder")
         
     
+    #retreive all restaurants stored in a folder
     def get_folder_contents(self, folder_id: int) -> list[RestaurantInfo]:
         try:
             stmt = select(Folder).where(Folder.folder_id == folder_id)
             folder_count = self.db.scalar(select(func.count()).select_from(Folder).where(Folder.folder_id == folder_id))
-            print(folder_count)
+            
+            #no folder found, don't look for contents
             if folder_count == 0:
                 raise Exception("Folder does not exist")
             
+            #get ids of restaurants in the folder
             stmt = select(RestaurantFolders.restaurant_id).where(RestaurantFolders.folder_id == folder_id)
             restaurant_ids = self.db.scalars(stmt).all()
 
+            #no restaurants in the folder, don't need to get information on restaurants
             if not restaurant_ids:
                 return []
         
+            #get restaurant info for each id
             stmt2 = select(RestaurantInfo).filter(RestaurantInfo.restaurant_id.in_(restaurant_ids))
             restaurants = self.db.scalars(stmt2).all()
             restaurant_infos = [RestaurantInfoSchema(restaurant_id=str(restaurant.restaurant_id), 

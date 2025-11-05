@@ -31,6 +31,7 @@ class UserRepository:
             match_usernames_count = self.db.scalar(select(func.count()).select_from(User).where(User.username == user.username))
             match_email_count = self.db.scalar(select(func.count()).select_from(User).where(User.email == user.email))
 
+
             #if either username or email or both already in use, send error
             if match_usernames_count > 0:
                 if match_email_count > 0:

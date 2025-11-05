@@ -23,7 +23,7 @@ class User(Base):
     
 
 
-#creates a mapped class that corresponds to the users table
+#creates a mapped class that corresponds to the folders table
 class Folder(Base):
     __tablename__ = 'folders'
     folder_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -45,6 +45,7 @@ class Folder(Base):
         self.user_id = user_id
 
 
+#creates a mapped class that corresponds to the restaurant info table
 class RestaurantInfo(Base):
     __tablename__ = 'restaurant_info'
     restaurant_id = Column(String, primary_key=True)
@@ -60,7 +61,6 @@ class RestaurantInfo(Base):
         back_populates="restaurants"
     )
 
-
     def __init__(self, restaurant_id: str, price_range: Optional[str], rest_name: str, avg_rating: Optional[float], loc: str, main_photo_url: Optional[str]):
         self.restaurant_id = restaurant_id
         self.price_range = price_range
@@ -70,6 +70,8 @@ class RestaurantInfo(Base):
         self.main_photo_url = main_photo_url
 
 
+
+#creates a mapped class that corresponds to the restaurant folders table
 class RestaurantFolders(Base):
     __tablename__ = "restaurant_folders"
     folder_id = Column(Integer, ForeignKey("folders.folder_id"), nullable=False, primary_key=True)

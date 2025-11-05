@@ -99,6 +99,7 @@ function MapPage () {
             }
         }
 
+        //gets folders to display in drop down menu
         async function getFolders() {
             try {
                 const jwt_token = JSON.parse(localStorage.getItem('token'));
@@ -157,10 +158,8 @@ function MapPage () {
             fields: ['displayName', 'formattedAddress', 'location', 'googleMapsURI', 'photos', 'priceLevel', 'rating']
         });
 
-        //sets all restaurant info
-        //sets showDetails to true so that panel will open
+        
         const photoUrl = place.photos?.[0]?.getURI({ maxWidth: 600 });
-
         const roundedRating = Math.round(place.rating)
 
         //splits address to 2 lines
@@ -168,7 +167,8 @@ function MapPage () {
         const arrayAddress = address.split(/,(.+)/).map(p => p.trim());
 
 
-
+        //sets all restaurant info
+        //sets showDetails to true so that panel will open
         setShowDetails(true);
         setLocName(place.displayName);
         setAddress(arrayAddress);
