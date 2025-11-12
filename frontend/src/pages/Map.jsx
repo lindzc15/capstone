@@ -16,6 +16,10 @@ function MapPage () {
     const {name, username, email, isLoggedIn} = useContext(AuthContext);
     const [folders, setFolders] = useState([]);
     const [selectedFolder, setSelectedFolder] = useState(null);
+    const [alert, setAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState(null);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     //to hold info for restaurant details to display in side panel
     const [loading, setLoading] = useState(true);
@@ -25,6 +29,10 @@ function MapPage () {
     const [price, setPrice] = useState(null);
     const [photoSrc, setPhotoSrc] = useState(null);
     const [rating, setRating] = useState(null);
+    const [id, setId] = useState(null);
+    const [ratingNum, setRatingNum] = useState(false);
+    const [priceString, setPriceString] = useState(false);
+    const [addressString, setAddressString] = useState(false);
 
     const [selectedPlace, setSelectedPlace] = useState(null);
     const navigate = useNavigate();
@@ -175,7 +183,10 @@ function MapPage () {
         setPrice(PRICE[place.priceLevel]);
         setRating(RATING[roundedRating]);
         setPhotoSrc(photoUrl);
-
+        setId(id);
+        setRatingNum(place.rating);
+        setPriceString(place.priceLevel);
+        setAddressString(place.formattedAddress);
         console.log(place.rating);
         console.log(photoUrl);
     }
@@ -250,11 +261,82 @@ function MapPage () {
         );
     };
 
+    async function saveRestaurant() {
+        if (selectedFolder == null) {
+            setError(true);
+            setErrorMessage("Must select a folder!");
+                setTimeout(() => {
+                    setError(false);
+                }, 1500);
+            return;
+        }
+        const selectedFolderId = selectedFolder.folder_id;
+        console.log(`folder id ${selectedFolderId}`);
+
+        try {
+            console.log(`${typeof(selectedFolderId)} ${selectedFolderId}, ${id} ${typeof(id)}, ${priceString} ${typeof(priceString)}, ${ratingNum}, ${typeof(ratingNum)}`);
+            const jwt_token = JSON.parse(localStorage.getItem('token'));
+            const response = await fetch("http://localhost:8080/api/folders/addrestaurant", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        folder_id: selectedFolderId,
+                        restaurant_id: id,
+                        rest_name: locName,
+                        loc: addressString,
+                        price_range: priceString,
+                        avg_rating: ratingNum,
+                        main_photo_url: photoSrc,
+                        jwt_token: jwt_token
+                    }),
+                    // Adding headers to the request
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    }
+            }) 
+            if (!response.ok) {
+                throw new Error("Failed to fetch folders");
+            }
+            const data = await response.json();
+            if (data.success) {
+                setAlert(true);
+                setAlertMessage("Restaurant added!");
+                setTimeout(() => {
+                    setAlert(false);
+                }, 1500);
+            }
+            if (!data.success) {
+                setError(true);
+                setErrorMessage("Restaurant already saved in this folder!");
+                setTimeout(() => {
+                    setError(false);
+                }, 1500);
+            }
+        }
+        catch (error) {
+            console.log(error);
+            setError(true);
+            setErrorMessage("Error saving restaurant");
+            setTimeout(() => {
+                    setError(false);
+                }, 1500);
+            return;
+        }
+        }   
 
     return (
         <MainLayout title='Map'>
             <div className="container d-flex flex-column flex-grow-1 justify-content-center">
                 <h3 className="text-center mb-4 header-txt">Map</h3>
+                {alert && (
+                            <div className="alert custom-alert position-absolute alert-below-header" role="alert">
+                                {alertMessage}
+                            </div>
+                        )}
+                {error && (
+                            <div className="alert custom-error position-absolute alert-below-header bg-danger" role="alert">
+                                {errorMessage}
+                            </div>
+                        )}
                 <div className="profile-div container d-flex flex-row flex-grow-1 justify-content-center">
                     <div id="map" className="shadow-lg p-3 mb-5 bg-body-tertiary rounded">
                         <Map
@@ -323,7 +405,7 @@ function MapPage () {
                                             )}
                                         </ul>
                                     </div>
-                                    <button type="submit" className="btn save-btn btn-primary mt-3 classicButton">
+                                    <button type="submit" className="btn save-btn btn-primary mt-3 classicButton" onClick={() => saveRestaurant()}>
                                         Save
                                     </button>
                                 </div>
