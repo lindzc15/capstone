@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import FolderAPI from "./APIs/FolderAPI";
 
 function MyFolders () {
-    const {name, username, email, isLoggedIn} = useContext(AuthContext);
+    const {name, username, email, isLoggedIn, authChecked} = useContext(AuthContext);
     const formRef = useRef(null);
     const [error, setError] = useState("");
     const [color, setColor] = useState('#DB1C07');
@@ -16,12 +16,13 @@ function MyFolders () {
 
     //if token expires, log user out
     useEffect(() => {
-        if (!isLoggedIn) {
+        if (authChecked && !isLoggedIn) {
             setError(null)
+            console.log("FROM MY FOLDERS");
             console.log(`redirecting: ${isLoggedIn}`);
             navigate('/login');
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, authChecked]);
 
     //tracks state of modal to determine if it should be displayed or not
     const [modal, setModal] = useState(false);

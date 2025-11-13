@@ -64,13 +64,16 @@ const FolderAPI = ({alert}) => {
         return <div className="alert alert-danger">{error}</div>;
     }
 
+    function navigateToContents(folder_id, folder_name) {
+        navigate('/myFolderContents', {state: {folder_id: folder_id, folder_name: folder_name}});
+    }
 
     return (
         <div className="row ms-auto me-auto">
         {/* For each folder, map the info to the correct place on the card */}
             {folders.map((folder) => (
                 <div className="col-md-4 col-lg-3 d-flex justify-content-center" key={folder.folder_id}>
-                    <div className="card shadow-lsm bg-body-tertiary rounded m-3 flex-grow-1 cursor">
+                    <div className="card shadow-lsm bg-body-tertiary rounded m-3 flex-grow-1 cursor" onClick={() => navigateToContents(folder.folder_id, folder.folder_name)}>
                         <div className="card-color" style={{background: `${folder.color ? folder.color : '#FFFFFF'}`}}></div>
                         <div className="card-body">
                             <h5 className="card-title">{folder.folder_name}</h5>

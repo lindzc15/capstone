@@ -12,6 +12,7 @@ export const AuthProvider = ( {children}) => {
     const [email, setEmail] = useState(null);
     const [token, setToken] = useState(null);
     const [authError, setAuthError] = useState(null);
+    const [authChecked, setAuthChecked] = useState(false);
 
     //extracts name from the jwt token, checking for errors
     function get_jwt_name(token) {
@@ -75,51 +76,42 @@ export const AuthProvider = ( {children}) => {
         async function verify_token(token) {
             const url = "http://localhost:8080/api/login/verify";
             try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({jwt_token: token})
-                }).catch(error => {
-                    console.log(`Error completing verify fetch: ${error}`);
-                    return false;
-                })
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.log(errorData.detail);
-                    return false;
-                }
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ jwt_token: token }),
+            });
 
-                //if token verification failed, return false
-                const login = await response.json();
-                if (!login.success) {
-                    return false;
-                }
-                else {
-                    //if token verification successful, store login token in local storage, set user info, set logged in to true
-                    localStorage.setItem("token", JSON.stringify(login.jwt_token));
-
-                    setName(get_jwt_name(login.jwt_token));
-                    setEmail(get_jwt_email(login.jwt_token));
-                    setUsername(get_jwt_username(login.jwt_token));
-
-                    setToken(login.jwt_token);
-                    setIsLoggedIn(true);
-                    return true;
-
-                }
+            const login = await response.json();
+            if (response.ok && login.success) {
+                // Successful login
+                localStorage.setItem("token", JSON.stringify(login.jwt_token));
+                setName(get_jwt_name(login.jwt_token));
+                setEmail(get_jwt_email(login.jwt_token));
+                setUsername(get_jwt_username(login.jwt_token));
+                setToken(login.jwt_token);
+                setIsLoggedIn(true);
+            } else {
+                // Token invalid
+                setIsLoggedIn(false);
+                localStorage.removeItem("token");
+            }
             } catch (error) {
-                console.error(`Error verifying user: ${error.message}`);
+            console.error(error);
+            setIsLoggedIn(false);
+            } finally {
+            setAuthChecked(true);
             }
         }
 
-        //only do verification call if local storage token found
-        const jwt_token = JSON.parse(localStorage.getItem('token'));
-        if(jwt_token) {
+        const jwt_token = JSON.parse(localStorage.getItem("token"));
+        if (jwt_token) {
             verify_token(jwt_token);
+        } else {
+            setAuthChecked(true);
         }
     }, []);
+
 
 
     //send login credentials to server for authentication
@@ -227,7 +219,7 @@ export const AuthProvider = ( {children}) => {
 
     //allows authentication props to be accessed across the app
     return (
-        <AuthContext.Provider value={{ login, name, username, email, isLoggedIn, logout, register, authError }}>
+        <AuthContext.Provider value={{ login, name, username, email, isLoggedIn, logout, register, authError, authChecked }}>
             {children}
         </AuthContext.Provider>
     )

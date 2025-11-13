@@ -192,6 +192,12 @@ p {
   height: 500px;
 }
 
+.details-card-small {
+  margin-left: 4em;
+  text-align: center;
+  height: 400px;
+}
+
 .card-text {
   text-align: left;
 }
@@ -233,6 +239,17 @@ p {
     background-size: cover;
 
 }
+
+.card-img-small {
+    display: inline-block;
+    width: 245px;
+    height: 220px;
+    margin: 5px;
+    background-position: center center;
+    background-size: cover;
+
+}
+
 .card:hover {
   cursor: pointer;
 }
@@ -324,8 +341,12 @@ footer {
     position: absolute; 
 }
 
-.cancel-btn {
+.cancel-btn, .back-btn {
   width: 8em;
+}
+
+.header-w-back {
+  padding-right: 7em;
 }
 
 

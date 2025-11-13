@@ -13,7 +13,7 @@ import {
 
 
 function MapPage () {
-    const {name, username, email, isLoggedIn} = useContext(AuthContext);
+    const {name, username, email, isLoggedIn, authChecked} = useContext(AuthContext);
     const [folders, setFolders] = useState([]);
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [alert, setAlert] = useState(false);
@@ -40,12 +40,12 @@ function MapPage () {
 
     //if token expires, log user out
     useEffect(() => {
-        if (!isLoggedIn) {
+        if (authChecked && !isLoggedIn) {
             setError(null)
             console.log(`redirecting: ${isLoggedIn}`);
             navigate('/login');
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, authChecked]);
 
     //to simplify price range display
     const PRICE = {

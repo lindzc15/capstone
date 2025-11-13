@@ -11,6 +11,7 @@ function Profile () {
             if (!isLoggedIn) {
                 setError(null)
                 console.log(`redirecting: ${isLoggedIn}`);
+                console.log("FROM PROFILE");
                 navigate('/login');
             }
     }, [isLoggedIn]);

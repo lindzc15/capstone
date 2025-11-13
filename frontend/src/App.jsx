@@ -7,6 +7,7 @@ import SignUp from "./pages/SignUp"
 import Profile from "./pages/Profile"
 import MapPage from "./pages/Map"
 import MyFolders from "./pages/MyFolders"
+import FolderContents from './pages/FolderContents';
 import { AuthContext } from "./context/AuthContext";
 import AuthRoute from './AuthRoute';
 
@@ -27,6 +28,7 @@ function App() {
             <Route path="/profile" element={<Profile/>}/>
             <Route path="/map" element={<MapPage/>}/>
             <Route path="/myFolders" element={<MyFolders/>}/>
+            <Route path="/myFolderContents" element={<FolderContents/>}/>
           </Route>
         </Routes>
       </div>

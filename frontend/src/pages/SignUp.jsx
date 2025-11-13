@@ -12,7 +12,7 @@ function SignUp() {
     const [error, setError] = useState("")
 
     const nav = useNavigate();
-    const {register, authError, isLoggedIn} = useContext(AuthContext);
+    const {register, authError, isLoggedIn, authChecked} = useContext(AuthContext);
 
     //get the reference to the form
     const formRef = useRef(null);
@@ -26,11 +26,10 @@ function SignUp() {
 
     //if logged in state changes, navigate to profile if logged in
     useEffect(() => {
-    if (isLoggedIn && (location.pathname === '/login' || location.pathname === '/signup')) {
-        console.log(`redirecting: ${isLoggedIn}, ${location.pathname}`);
-        nav('/profile');
-    }
-    }, [isLoggedIn, location.pathname]);
+        if (authChecked && isLoggedIn) {
+            navigate("/profile");
+        }
+    }, [authChecked, isLoggedIn, navigate]);
 
 
     //when sign up buton clicked, attempt to register new user

@@ -8,18 +8,18 @@ function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const {isLoggedIn, login} = useContext(AuthContext);
+    const {isLoggedIn, login, authChecked} = useContext(AuthContext);
     const navigate = useNavigate();
     const formRef = useRef(null);
 
     //if logged in state changes to true, navigate to profile
     useEffect(() => {
-    if (isLoggedIn && (location.pathname === '/login' || location.pathname === '/signup')) {
-        setError(null)
-        console.log(`redirecting: ${isLoggedIn}, ${location.pathname}`);
-        navigate('/profile');
-    }
-    }, [isLoggedIn, location.pathname]);
+        if (authChecked && isLoggedIn) {
+            navigate("/profile");
+        }
+    }, [authChecked, isLoggedIn, navigate]);
+
+
 
 
     //when login button clicked, attempt login
