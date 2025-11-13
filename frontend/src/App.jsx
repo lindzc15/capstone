@@ -8,6 +8,7 @@ import Profile from "./pages/Profile"
 import MapPage from "./pages/Map"
 import MyFolders from "./pages/MyFolders"
 import FolderContents from './pages/FolderContents';
+import RestaurantDetails from './pages/RestaurantDetails';
 import { AuthContext } from "./context/AuthContext";
 import AuthRoute from './AuthRoute';
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/map" element={<MapPage/>}/>
             <Route path="/myFolders" element={<MyFolders/>}/>
             <Route path="/myFolderContents" element={<FolderContents/>}/>
+            <Route path="/restaurantDetails" element={<RestaurantDetails/>}/>
           </Route>
         </Routes>
       </div>
