@@ -18,7 +18,6 @@ const FolderAPI = ({alert}) => {
         const fetchFolders = async () => {
             setLoading(true);
             setError(null);
-            console.log('entered api');
             try {
                 const response = await fetch("http://localhost:8080/api/folders", {
                         method: "POST",

@@ -185,6 +185,10 @@ p {
   text-align: left;
 }
 
+.card-title-big {
+  font-size: 1.5em;
+}
+
 .details-card {
   width: 30rem;
   margin-left: 2em;
@@ -198,6 +202,11 @@ p {
   height: 400px;
 }
 
+.details-card-big {
+  width: 38rem;
+  text-align: center;
+  height: 58em;
+}
 .card-text {
   text-align: left;
 }
@@ -247,9 +256,16 @@ p {
     margin: 5px;
     background-position: center center;
     background-size: cover;
-
 }
 
+.card-img-big {
+  display: inline-block;
+  width: 35em;
+  height: 20em;
+  margin: 5px;
+  background-position: center center;
+  background-size: cover;
+}
 .card:hover {
   cursor: pointer;
 }
@@ -345,9 +361,20 @@ footer {
   width: 8em;
 }
 
+
 .header-w-back {
   padding-right: 7em;
 }
+
+.hours-div {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.link {
+  font-weight: bold;
+}
+
 
 
 @media screen and (max-width: 991px) {

@@ -11,7 +11,7 @@ function SignUp() {
     const [passConfirm, setPassConfirm] = useState("")
     const [error, setError] = useState("")
 
-    const nav = useNavigate();
+    const navigate = useNavigate();
     const {register, authError, isLoggedIn, authChecked} = useContext(AuthContext);
 
     //get the reference to the form
