@@ -168,7 +168,7 @@ p {
 }
 
 #map {
-  height: 500px;
+  height: 42em;
   width: 100%;
 }
 
@@ -193,7 +193,7 @@ p {
   width: 30rem;
   margin-left: 2em;
   text-align: center;
-  height: 500px;
+  height: 42em;
 }
 
 .details-card-small {
@@ -280,8 +280,7 @@ p {
 
 footer {
   margin-top: auto;
-  /* Add specific footer styles */
-  height: 60px; /* Example height */
+  height: 60px; 
   padding: 10px;
   text-align: center;
 }

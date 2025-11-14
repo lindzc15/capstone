@@ -129,7 +129,7 @@ const RestaurantDetails = () => {
                 <h3 className="text-center m-0 header-txt flex-grow-1 header-w-back">Restaurant Details</h3>
             </div>
             <div className="row justify-content-center ms-auto me-auto">
-                <div className="card shadow-lg p-3 rounded brown-txt details-card-big">
+                <div className="card shadow-lg p-3 rounded brown-txt details-card-big me-2">
                             {photoSrc ? (
                                 <img src={photoSrc} className="card-img-top card-img-big" alt={`${locName || 'Restaurant'} photo`}></img>
                             ) : (
@@ -148,7 +148,7 @@ const RestaurantDetails = () => {
                                 )}
                                 <p className="card-text address-txt">{address[0] || 'Address unavailable'}</p>
                                 <p className="card-text address-txt mb-3">{address[1] || ''}</p>
-                                <div className="hours-div">
+                                <div className="hours-div mb-5">
                                     <p className="card-title-big">Hours:</p>
                                 {hours ? (
                                     hours.map((day, index) => (
@@ -159,13 +159,21 @@ const RestaurantDetails = () => {
                                 )}
                                 </div>
                                 {websiteURL ? (
-                                <a href={websiteURL} className="brown-txt link">Visit website</a>
+                                <a href={websiteURL} target="_blank" className="brown-txt link">Visit website</a>
                                     ) : (
                                         <div className="">
                                         </div>
                                 )}
     
                             </div>
+                </div>
+                <div className="card shadow-lg p-3 rounded brown-txt details-card-big ms-2">
+                    <h3 class="card-title text-center mt-4 header-txt">My Restaurant Notes</h3>
+                    <div className="card-body text-start">
+                                
+                                
+    
+                    </div>
                 </div>
         </div>
         </div>
