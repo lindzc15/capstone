@@ -168,7 +168,7 @@ p {
 }
 
 #map {
-  height: 42em;
+  height: 65vh;
   width: 100%;
 }
 
@@ -193,7 +193,7 @@ p {
   width: 30rem;
   margin-left: 2em;
   text-align: center;
-  height: 42em;
+  height: 65vh;
 }
 
 .details-card-small {

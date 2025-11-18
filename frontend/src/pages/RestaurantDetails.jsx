@@ -7,17 +7,19 @@ import MainLayout from "../layouts/MainLayout"
 
 //gets folders from API then dynamically creates display cards for each 
 const RestaurantDetails = () => {
-    const { username, isLoggedIn, authChecked } = useContext(AuthContext);
+    const { username, isLoggedIn, authChecked, verify_token } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
     const {folder_id, folder_name, restaurant_id} = location.state;
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
-    //holds states of restaurant info
-    const [restaurants, setRestaurants] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [showNotes, setShowNotes] = useState(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [alertMessage, setAlertMessage] = useState(null);
+    const [showAlert, setShowAlert] = useState(false);
+
+    //holds states of restaurant info
     const [locName, setLocName] = useState(null)
     const [address, setAddress] = useState(null);
     const [price, setPrice] = useState(null);
@@ -28,7 +30,7 @@ const RestaurantDetails = () => {
 
     //holds states of restaurant notes
     const formRef = useRef(null);
-    const [userRating, setUserRating] = useState(null);
+    const [userRating, setUserRating] = useState(0);
     const [dateVisited, setDateVisited] = useState(null);
     const [favoriteFood, setFavoriteFood] = useState(null);
     const [notes, setNotes] = useState(null);
@@ -63,6 +65,7 @@ const RestaurantDetails = () => {
 
 
     useEffect(() => {
+        //retrieves additional restaurant details from google maps api
         async function getPlaceFullDetails() {
             const { Place } = await google.maps.importLibrary("places");
 
@@ -100,8 +103,98 @@ const RestaurantDetails = () => {
             console.log(hours);
 
         }
+
+        //get users notes on the given restaurant
+        async function getUserNotes() {
+            try {
+                verify_token();
+                const jwt_token = JSON.parse(localStorage.getItem('token'));
+                const response = await fetch("http://localhost:8080/api/folders/get/notes", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            jwt_token: jwt_token,
+                            restaurant_id: restaurant_id
+                        }),
+                        // Adding headers to the request
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8"
+                        }
+                }) 
+                if (!response.ok) {
+                    throw new Error("Failed to fetch notes");
+                }
+                const data = await response.json();
+                if (data.success) {
+                    const notes = data.user_notes
+                    setUserRating(notes.user_rating);
+                    setDateVisited(notes.date_visited);
+                    setFavoriteFood(notes.favorite_dish);
+                    setNotes(notes.notes);
+                }
+            }
+            catch (error) {
+                console.log(error);
+                setError(true);
+                setErrorMessage(`Error retrieving your restaurant notes`);
+                setTimeout(() => {
+                        setError(false);
+                    }, 1500);
+                return;
+            }
+        }
+        getUserNotes();
         getPlaceFullDetails();
     }, []);
+
+    //save user notes for the given restuarant
+    async function saveNotes() {
+        verify_token();
+        try {        
+            verify_token();
+            console.log(userRating, typeof(userRating));
+            console.log(restaurant_id);
+            console.log(dateVisited);
+            console.log(favoriteFood);
+            console.log(notes);
+            const jwt_token = JSON.parse(localStorage.getItem('token'));
+            const response = await fetch("http://localhost:8080/api/folders/add/notes", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        jwt_token: jwt_token,
+                        restaurant_id: restaurant_id,
+                        user_rating: userRating ? parseFloat(userRating) : 0,
+                        date_visited: dateVisited ? dateVisited : "",
+                        favorite_dish: favoriteFood ? favoriteFood : "",
+                        notes: notes ? notes : ""
+                    }),
+                    // Adding headers to the request
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    }
+            }) 
+            if (!response.ok) {
+                throw new Error("Failed to fetch notes");
+            }
+            const data = await response.json();
+            if (data.success) {
+                setShowAlert(true);
+                setAlertMessage(`Notes updated!`);
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 1500);
+            return;
+            }
+        }
+        catch (error) {
+            console.log(error);
+            setError(true);
+            setErrorMessage(`Error saving your restaurant notes`);
+            setTimeout(() => {
+                    setError(false);
+                }, 1500);
+            return;
+        }
+    }
 
     if (loading) {
         return (
@@ -123,18 +216,6 @@ const RestaurantDetails = () => {
         navigate('/myFolderContents', {state: {folder_id: folder_id, folder_name: folder_name}});
     }
 
-    function handleSubmit() {
-
-    }
- 
-    if (error) {
-        return (
-            <MainLayout title="Error">
-                <div className="alert alert-danger">{error}</div>;
-            </MainLayout>
-        )
-    }
-
 
     return (
         <MainLayout title="My Folders">
@@ -145,6 +226,16 @@ const RestaurantDetails = () => {
                 </button>
                 <h3 className="text-center m-0 header-txt flex-grow-1 header-w-back">Restaurant Details</h3>
             </div>
+            {showAlert && (
+                            <div className="alert custom-alert position-absolute alert-below-header" role="alert">
+                                {alertMessage}
+                            </div>
+            )}
+            {error && (
+                <div className="alert custom-error position-absolute alert-below-header bg-danger" role="alert">
+                    {errorMessage}
+                </div>
+            )}
             <div className="row justify-content-center ms-auto me-auto">
                 <div className="card shadow-lg p-3 rounded brown-txt details-card-big me-2">
                             {photoSrc ? (
@@ -185,57 +276,62 @@ const RestaurantDetails = () => {
                             </div>
                 </div>
                 <div className="card shadow-lg p-3 rounded brown-txt details-card-big ms-2">
-                    <h3 class="card-title text-center mt-4 header-txt">My Restaurant Notes</h3>
+                    <h3 className="card-title text-center mt-4 header-txt">My Restaurant Notes</h3>
                     <div className="card-body text-start">
-                        <form onSubmit={handleSubmit} className="needs-validation" noValidate ref={formRef}>
-                            {error && <div className="alert alert-danger" role="alert">
-                                {error}
-                            </div>}
-                            <div class="col-md-3 mb-5">
-                                <label for="ratingSelect" className="card-title-big mb-2">My Rating</label>
-                                <select class="custom-select rating-select" id="ratingSelect" 
+                        <form className="needs-validation" noValidate ref={formRef}>
+                            <div className="col-md-3 mb-5">
+                                <label htmlFor="ratingSelect" className="card-title-big mb-2">My Rating</label>
+                                <select className="custom-select rating-select" id="ratingSelect" 
                                     onChange={e => {
-                                        setRating(e.target.value);
+                                        setUserRating(e.target.value);
                                         enableSaveBtn();
-                                    }}>
-                                    <option selected disabled value="">Choose...</option>
-                                    <option>⭐️</option>
-                                    <option>⭐️⭐️</option>
-                                    <option>⭐️⭐️⭐️</option>
-                                    <option>⭐️⭐️⭐️⭐️</option>
-                                    <option>⭐️⭐️⭐️⭐️⭐️</option>
+                                    }}
+                                    value={Math.floor(userRating)}
+                                    >
+                                    <option disabled value="0">Choose...</option>
+                                    <option value="1">⭐️</option>
+                                    <option value="2">⭐️⭐️</option>
+                                    <option value="3">⭐️⭐️⭐️</option>
+                                    <option value="4">⭐️⭐️⭐️⭐️</option>
+                                    <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
                                 </select>
                             </div>
 
-                            <label for="startDate" className="card-title-big mb-2">Date Visited</label>
-                            <input id="startDate" class="form-control mb-5" type="date" 
+                            <label htmlFor="startDate" className="card-title-big mb-2">Date Visited</label>
+                            <input id="startDate" className="form-control mb-5" type="date" 
                                 onChange={(e) => {
                                     setDateVisited(e.target.value);
                                     enableSaveBtn();
-                                }}/>
+                                }}
+                                value={dateVisited}
+                            />
 
                             
-                            <div class="form-group">
-                                <label for="favoriteDishTextArea" className="card-title-big mb-2">Favorite Menu Items</label>
-                                <textarea class="form-control mb-5" id="FavoriteDishTextArea" rows="4" 
+                            <div className="form-group">
+                                <label htmlFor="favoriteDishTextArea" className="card-title-big mb-2">Favorite Menu Items</label>
+                                <textarea className="form-control mb-5" id="FavoriteDishTextArea" rows="4" 
                                     onChange={e => {
                                         setFavoriteFood(e.target.value);
                                         enableSaveBtn();
-                                    }}></textarea>
+                                    }}
+                                    value={favoriteFood}>
+                                </textarea>
                             </div>
                            
-                           <div class="form-group">
-                                <label for="favoriteDishTextArea" className="card-title-big mb-2">Other Notes</label>
-                                <textarea class="form-control mb-5" id="FavoriteDishTextArea" rows="4" 
+                           <div className="form-group">
+                                <label htmlFor="favoriteDishTextArea" className="card-title-big mb-2">Other Notes</label>
+                                <textarea className="form-control mb-5" id="FavoriteDishTextArea" rows="4" 
                                     onChange={e => {
                                         setNotes(e.target.value);
                                         enableSaveBtn();
-                                    }}></textarea>
+                                    }}
+                                    value={notes}>
+                                </textarea>
                             </div>
                             
                             
                             <div className="container d-flex flex-row flex-grow-1 justify-content-center">  
-                                <button type="submit" className="btn btn-primary mt-3 classicButton" disabled={buttonDisabled}>
+                                <button type="button" className="btn btn-primary mt-3 classicButton" disabled={buttonDisabled} onClick={saveNotes}>
                                 Save Changes
                             </button>
                             </div>

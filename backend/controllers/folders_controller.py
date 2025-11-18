@@ -74,7 +74,7 @@ async def getFolderContents(request: FolderContentsRequest, folder_service: Fold
 
 
 #adds notes to a specific restaurant
-@router.post("/restaurant/notes", response_model=AddResponse)
+@router.post("/add/notes", response_model=AddResponse)
 @inject
 async def addRestaurantNotes(request: AddNotesRequest, folder_service: FolderServices = Depends(Provide[Container.folder_service])):
     try:
@@ -87,7 +87,7 @@ async def addRestaurantNotes(request: AddNotesRequest, folder_service: FolderSer
     
 
 #get notes for a specific user/restaurant
-@router.get("/restaurant/notes", response_model=NotesResponse)
+@router.post("/get/notes", response_model=NotesResponse)
 @inject
 async def getRestaurantNotes(request: NotesRequest, folder_service: FolderServices = Depends(Provide[Container.folder_service])):
     try:
