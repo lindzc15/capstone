@@ -93,10 +93,11 @@ class UserRestaurantNotes(Base):
     favorite_dish = Column(String(255))
     notes = Column(String(255))
 
-    def __init__(self, user_id: int, restaurant_id: String, user_rating: String, date_visited: String, favorite_dish: String):
+    def __init__(self, user_id: int, restaurant_id: str, user_rating: str, date_visited: str, favorite_dish: str, notes: str):
         self.user_id = user_id
         self.restaurant_id = restaurant_id
         self.user_rating = user_rating
         self.date_visited = date_visited
         self.favorite_dish = favorite_dish
+        self.notes = notes
         

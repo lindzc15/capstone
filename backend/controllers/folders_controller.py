@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 
 
-from schemas.folder_schema import FolderInfo, FolderRequest,  FolderResponse, AddFolderRequest, AddResponse, AddRestaurantRequest, FolderContentsRequest, FolderContentsResponse, RestaurantInfoSchema
+from schemas.folder_schema import FolderInfo, FolderRequest,  FolderResponse, AddFolderRequest, AddResponse, AddRestaurantRequest, FolderContentsRequest, FolderContentsResponse, RestaurantInfoSchema, AddNotesRequest, NotesResponse, NotesRequest, NotesInfoSchema
 from schemas.message_schema import MessageResponse
 from services.login_services import LoginServices
 from services.folder_services import FolderServices
@@ -76,15 +76,28 @@ async def getFolderContents(request: FolderContentsRequest, folder_service: Fold
 #adds notes to a specific restaurant
 @router.post("/restaurant/notes", response_model=AddResponse)
 @inject
-async def addRestToFolder(request: AddRestaurantRequest, folder_service: FolderServices = Depends(Provide[Container.folder_service])):
+async def addRestaurantNotes(request: AddNotesRequest, folder_service: FolderServices = Depends(Provide[Container.folder_service])):
     try:
-        #tries to add restaurant
-        added = folder_service.add_restaurant(request.folder_id, request.restaurant_id, request.rest_name, request.price_range, request.avg_rating, request.loc, request.main_photo_url)
-        if added:
-            return AddResponse(success=True, message="")
+        #tries to add notes to restaurant
+        folder_service.add_restaurant_notes(request.jwt_token, request.restaurant_id, request.user_rating, request.date_visited, request.favorite_dish, request.notes)
+        return AddResponse(success=True, message="")
+    except Exception as e:
+        #on failure, send back 500 error, server side error
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+#get notes for a specific user/restaurant
+@router.get("/restaurant/notes", response_model=NotesResponse)
+@inject
+async def getRestaurantNotes(request: NotesRequest, folder_service: FolderServices = Depends(Provide[Container.folder_service])):
+    try:
+        #tries to retrieve restaurant notes for that user
+        notes = folder_service.get_restaurant_notes(request.jwt_token, request.restaurant_id)
+        if notes:
+            return NotesResponse(success=True, message="", user_notes=notes)
         else:
-            #if no error but false, the restaurant already exists in the folder
-            return AddResponse(success=False, message="Duplicate entry")
+            #if no error but false, the user has no existing notes for that restaurant
+            return NotesResponse(success=False, message="No existing notes", user_notes=None)
     except Exception as e:
         #on failure, send back 500 error, server side error
         raise HTTPException(status_code=500, detail=str(e))

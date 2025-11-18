@@ -2,7 +2,7 @@ import hashlib
 import jwt
 import datetime
 from repositories.folder_repository import FolderRepository
-from models.user_model import Folder, RestaurantFolders, RestaurantInfo
+from models.user_model import Folder, RestaurantFolders, RestaurantInfo, UserRestaurantNotes
 from schemas.folder_schema import RestaurantInfoSchema
 from config import settings
 
@@ -77,5 +77,45 @@ class FolderServices:
             return restaurant_list
         except Exception as e:
             raise Exception(f"Failed to retrieve folder contents: {str(e)}")
+        
+    
+    #adds restaurant notes for a restaurant for a given user
+    def add_restaurant_notes(self, jwt_token: str, restaurant_id: str, user_rating: float, date_visited: str, favorite_dish: str, notes: str):
+        try: 
+            payload = jwt.decode(jwt_token, settings.secret_key, settings.algorithm)
+            user_id = payload['user']['id']
+
+            #fetch user from database, raise exception if user not found
+            if not user_id:
+                raise Exception("Invalid user")
+            
+            rest_notes = UserRestaurantNotes(user_id, restaurant_id, user_rating, date_visited, favorite_dish, notes)
+            
+            self.folder_repository.add_restaurant_notes(rest_notes)
+            return
+        
+        except Exception as e:
+            raise Exception(f"Failed to add notes: {str(e)}")
+        
+
+
+    #gets restaurant notes for a restaurant for a given user
+    def get_restaurant_notes(self, jwt_token: str, restaurant_id: str):
+        try: 
+            payload = jwt.decode(jwt_token, settings.secret_key, settings.algorithm)
+            user_id = payload['user']['id']
+
+            #fetch user from database, raise exception if user not found
+            if not user_id:
+                raise Exception("Invalid user")
+            
+            rest_notes =  self.folder_repository.get_restaurant_notes(user_id, restaurant_id)
+            if rest_notes:
+                return rest_notes
+            else:
+                return False
+        
+        except Exception as e:
+            raise Exception(f"Failed to find restaurant notes: {str(e)}")
         
     

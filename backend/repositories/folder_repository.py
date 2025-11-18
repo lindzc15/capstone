@@ -1,9 +1,10 @@
 import json
-from models.user_model import Folder, RestaurantFolders, RestaurantInfo
-from schemas.folder_schema import FolderInfo, RestaurantInfoSchema
-from sqlalchemy import select, func, and_
+from models.user_model import Folder, RestaurantFolders, RestaurantInfo, UserRestaurantNotes
+from schemas.folder_schema import FolderInfo, RestaurantInfoSchema, NotesInfoSchema
+from sqlalchemy import select, func, and_, update
 from sqlalchemy.orm import Session
 from typing import Optional, Tuple
+from sqlalchemy.dialects import postgresql
 
 from db.db import get_db_session
 
@@ -119,3 +120,74 @@ class FolderRepository:
             self.db.rollback()
             print("DB Error:", e)
             raise Exception("Error finding folder contents: ", e)
+        
+
+    #adds restaurant notes to a restaurant for a given user
+    def add_restaurant_notes(self, user_notes: UserRestaurantNotes):
+        try:
+            user_rest_notes_count = self.db.scalar(
+                    select(func.count()).select_from(UserRestaurantNotes)
+                    .where(
+                        and_(
+                            UserRestaurantNotes.user_id == user_notes.user_id,
+                            UserRestaurantNotes.restaurant_id == user_notes.restaurant_id
+                        )
+                    )
+                )
+            print("made it here")
+            #user already has existing rest notes, do update
+            if user_rest_notes_count > 0:
+                stmt = (
+                    update(UserRestaurantNotes)
+                    .where(
+                        UserRestaurantNotes.user_id == user_notes.user_id,
+                        UserRestaurantNotes.restaurant_id == user_notes.restaurant_id
+                    )
+                    .values(
+                        user_rating=user_notes.user_rating,
+                        date_visited=user_notes.date_visited,
+                        favorite_dish=user_notes.favorite_dish,
+                        notes=user_notes.notes
+                    )
+                )
+                self.db.execute(stmt)
+                self.db.commit()
+                return
+            
+            #no existing notes, do insert
+            else:
+                self.db.add(user_notes)
+                self.db.commit()
+                self.db.refresh(user_notes)
+                return
+        except Exception as e:
+            self.db.rollback()
+            print("DB Error:", e)
+            raise Exception("Error adding restaurant notes: ", e)
+
+
+    def get_restaurant_notes(self, user_id: str, restaurant_id: str):
+        try:
+            stmt = select(UserRestaurantNotes).where(
+                UserRestaurantNotes.user_id == user_id,
+                UserRestaurantNotes.restaurant_id == restaurant_id
+            )
+            result = self.db.execute(stmt).first()
+
+            #user has existing notes, return them
+            if result:
+                print("made it here")
+                row = result[0]
+                print(row.user_rating)
+                print(row.date_visited)
+                print(row.favorite_dish)
+                print(row.notes)
+                notes = NotesInfoSchema(user_rating=float(row.user_rating), date_visited=str(row.date_visited), favorite_dish=str(row.favorite_dish), notes=str(row.notes))
+                return notes
+            #no existing notes, return false
+            else:
+                return False
+        except Exception as e:
+            self.db.rollback()
+            print("DB Error:", e)
+            raise Exception("Error retrieving restaurant notes: ", e)
