@@ -20,8 +20,6 @@ function Login() {
     }, [authChecked, isLoggedIn, navigate]);
 
 
-
-
     //when login button clicked, attempt login
     async function handleSubmit(e) {
         e.preventDefault();

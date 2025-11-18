@@ -13,7 +13,7 @@ import {
 
 
 function MapPage () {
-    const {name, username, email, isLoggedIn, authChecked} = useContext(AuthContext);
+    const {name, username, email, isLoggedIn, authChecked, verify_token} = useContext(AuthContext);
     const [folders, setFolders] = useState([]);
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [alert, setAlert] = useState(false);
@@ -42,6 +42,7 @@ function MapPage () {
     useEffect(() => {
         if (authChecked && !isLoggedIn) {
             setError(null)
+            console.log("FROM MY FOLDERS");
             console.log(`redirecting: ${isLoggedIn}`);
             navigate('/login');
         }
@@ -110,6 +111,7 @@ function MapPage () {
         //gets folders to display in drop down menu
         async function getFolders() {
             try {
+                verify_token();
                 const jwt_token = JSON.parse(localStorage.getItem('token'));
                 const response = await fetch("http://localhost:8080/api/folders", {
                         method: "POST",
@@ -274,6 +276,7 @@ function MapPage () {
         console.log(`folder id ${selectedFolderId}`);
 
         try {
+            verify_token();
             console.log(`${typeof(selectedFolderId)} ${selectedFolderId}, ${id} ${typeof(id)}, ${priceString} ${typeof(priceString)}, ${ratingNum}, ${typeof(ratingNum)}`);
             const jwt_token = JSON.parse(localStorage.getItem('token'));
             const response = await fetch("http://localhost:8080/api/folders/addrestaurant", {

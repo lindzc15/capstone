@@ -9,10 +9,21 @@ const FolderAPI = ({alert}) => {
     const [folders, setFolders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { username, isLoggedIn } = useContext(AuthContext);
+    const { username, isLoggedIn, verify_token, authChecked } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    //if token expires, log user out
     useEffect(() => {
+        if (authChecked && !isLoggedIn) {
+            setError(null)
+            console.log("FROM MY FOLDERS");
+            console.log(`redirecting: ${isLoggedIn}`);
+            navigate('/login');
+        }
+    }, [isLoggedIn, authChecked]);
+
+    useEffect(() => {
+        verify_token();
         const jwt_token = JSON.parse(localStorage.getItem('token'));
         //fetch folders
         const fetchFolders = async () => {

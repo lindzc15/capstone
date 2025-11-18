@@ -10,7 +10,7 @@ const FolderContents = () => {
     const [restaurants, setRestaurants] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { username, isLoggedIn, authChecked } = useContext(AuthContext);
+    const { username, isLoggedIn, authChecked, verify_token } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
     console.log(location.state);
@@ -34,7 +34,7 @@ const FolderContents = () => {
         4: '⭐️⭐️⭐️⭐️',
         5: '⭐️⭐️⭐️⭐️⭐️'
     }
-
+    
     //if token expires, log user out
     useEffect(() => {
         if (authChecked && !isLoggedIn) {
@@ -51,6 +51,7 @@ const FolderContents = () => {
             setLoading(true);
             setError(null);
             try {
+                verify_token();
                 const response = await fetch("http://localhost:8080/api/folders/contents", {
                         method: "POST",
                         body: JSON.stringify({

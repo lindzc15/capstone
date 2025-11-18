@@ -73,7 +73,12 @@ export const AuthProvider = ( {children}) => {
     //checks for token in local storage on page load
     //if found, send to server for verification
     useEffect(() => {
-        async function verify_token(token) {
+        const jwt_token = JSON.parse(localStorage.getItem("token"));
+        verify_token(jwt_token);
+    }, []);
+
+    async function verify_token() {
+            const token = JSON.parse(localStorage.getItem("token"));
             const url = "http://localhost:8080/api/login/verify";
             try {
             const response = await fetch(url, {
@@ -103,15 +108,6 @@ export const AuthProvider = ( {children}) => {
             setAuthChecked(true);
             }
         }
-
-        const jwt_token = JSON.parse(localStorage.getItem("token"));
-        if (jwt_token) {
-            verify_token(jwt_token);
-        } else {
-            setAuthChecked(true);
-        }
-    }, []);
-
 
 
     //send login credentials to server for authentication
@@ -219,7 +215,7 @@ export const AuthProvider = ( {children}) => {
 
     //allows authentication props to be accessed across the app
     return (
-        <AuthContext.Provider value={{ login, name, username, email, isLoggedIn, logout, register, authError, authChecked }}>
+        <AuthContext.Provider value={{ login, name, username, email, isLoggedIn, logout, register, authError, authChecked, verify_token }}>
             {children}
         </AuthContext.Provider>
     )

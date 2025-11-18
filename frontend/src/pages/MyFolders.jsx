@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import FolderAPI from "./APIs/FolderAPI";
 
 function MyFolders () {
-    const {name, username, email, isLoggedIn, authChecked} = useContext(AuthContext);
+    const {name, username, email, isLoggedIn, authChecked, verify_token} = useContext(AuthContext);
     const formRef = useRef(null);
     const [error, setError] = useState("");
     const [color, setColor] = useState('#DB1C07');
@@ -24,6 +24,7 @@ function MyFolders () {
         }
     }, [isLoggedIn, authChecked]);
 
+    
     //tracks state of modal to determine if it should be displayed or not
     const [modal, setModal] = useState(false);
 
@@ -56,6 +57,7 @@ function MyFolders () {
         else {
             console.log('entered api');
             try {
+                verify_token();
                 //try to add folder
                 const jwt_token = JSON.parse(localStorage.getItem('token'));
                 const response = await fetch("http://localhost:8080/api/folders/add", {
