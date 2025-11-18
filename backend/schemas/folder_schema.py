@@ -50,3 +50,12 @@ class RestaurantInfoSchema(BaseModel):
 class FolderContentsResponse(BaseModel):
     success: bool
     contents: List[RestaurantInfoSchema]
+
+
+class AddNotesRequest(BaseModel):
+    jwt: str
+    restaurant_id: str
+    user_rating: float
+    date_visited: str
+    favorite_dish: str
+    notes: str

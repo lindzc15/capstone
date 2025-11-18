@@ -73,3 +73,19 @@ async def getFolderContents(request: FolderContentsRequest, folder_service: Fold
     
 
 
+#adds notes to a specific restaurant
+@router.post("/restaurant/notes", response_model=AddResponse)
+@inject
+async def addRestToFolder(request: AddRestaurantRequest, folder_service: FolderServices = Depends(Provide[Container.folder_service])):
+    try:
+        #tries to add restaurant
+        added = folder_service.add_restaurant(request.folder_id, request.restaurant_id, request.rest_name, request.price_range, request.avg_rating, request.loc, request.main_photo_url)
+        if added:
+            return AddResponse(success=True, message="")
+        else:
+            #if no error but false, the restaurant already exists in the folder
+            return AddResponse(success=False, message="Duplicate entry")
+    except Exception as e:
+        #on failure, send back 500 error, server side error
+        raise HTTPException(status_code=500, detail=str(e))
+

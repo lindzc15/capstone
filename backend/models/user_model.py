@@ -82,3 +82,21 @@ class RestaurantFolders(Base):
         self.restaurant_id = restaurant_id
 
     
+
+#creates a mapped class that corresponds to the restaurant folders table
+class UserRestaurantNotes(Base):
+    __tablename__ = "user_restaurant_notes"
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True)
+    restaurant_id = Column(String, ForeignKey("restaurant_info.restaurant_id"), nullable=False, primary_key=True)
+    user_rating = Column(Numeric(2,1))
+    date_visited = Column(String(20))
+    favorite_dish = Column(String(255))
+    notes = Column(String(255))
+
+    def __init__(self, user_id: int, restaurant_id: String, user_rating: String, date_visited: String, favorite_dish: String):
+        self.user_id = user_id
+        self.restaurant_id = restaurant_id
+        self.user_rating = user_rating
+        self.date_visited = date_visited
+        self.favorite_dish = favorite_dish
+        
