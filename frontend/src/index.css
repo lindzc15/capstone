@@ -266,7 +266,7 @@ p {
   background-position: center center;
   background-size: cover;
 }
-.card:hover {
+.cursor-pointer {
   cursor: pointer;
 }
 
@@ -372,6 +372,20 @@ footer {
 
 .link {
   font-weight: bold;
+}
+
+.btn:disabled {
+  color: var(--main-brown);
+  background-color: var(--main-yellow);
+  border-color: var(--main-brown);
+  font-weight: bold;
+  border-width: 2px;
+  width: 12em;
+}
+
+.rating-select {
+  height: 2em;
+  width: 8em;
 }
 
 
