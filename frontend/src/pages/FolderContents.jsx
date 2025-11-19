@@ -121,7 +121,7 @@ const FolderContents = () => {
             </div>
             <div className="row ms-auto me-auto">
             {/* For each folder, map the info to the correct place on the card */}
-            {restaurants.map((restaurant) => (
+            {restaurants?.map((restaurant) => (
                 <div className="card shadow-lg p-3 mb-5 bg-body-tertiary rounded brown-txt details-card-small cursor-pointer" onClick={() => navToDetails(restaurant.restaurant_id)}>
                             {restaurant.main_photo_url ? (
                                 <img src={restaurant.main_photo_url} className="card-img-top card-img-small" alt={`${restaurant.rest_name || 'Restaurant'} photo`}></img>

@@ -94,7 +94,7 @@ const RestaurantDetails = () => {
             setPrice(PRICE[place.priceLevel]);
             setRating(RATING[roundedRating]);
             setPhotoSrc(photoUrl);
-            setHours(place.regularOpeningHours.weekdayDescriptions);
+            setHours(place.regularOpeningHours?.weekdayDescriptions);
             setWebsiteURL(place.websiteURI);
             
             setLoading(false);

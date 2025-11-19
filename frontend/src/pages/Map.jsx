@@ -250,6 +250,12 @@ function MapPage () {
                 //when place changed, set new place so map can adjust view
                 //then call functions to open side panel and fetch details
                 const place = placeAutocomplete.getPlace();
+
+                //if not a valid place entered, don't open details panel
+                if (!place.place_id) {
+                    console.log("No valid place selected");
+                    return;
+                }
                 console.log(place.place_id);
                 setShowDetails(true);
                 getPlaceDetails(place.place_id);
@@ -341,7 +347,7 @@ function MapPage () {
                             </div>
                         )}
                 <div className="profile-div container d-flex flex-row flex-grow-1 justify-content-center">
-                    <div id="map" className="shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+                    <div id="map" className="shadow-lg p-3 mb-5 bg-body-tertiary rounded" data-testid="map-container" >
                         <Map
                             mapId={mapID}
                             defaultZoom={17}
@@ -352,13 +358,13 @@ function MapPage () {
                         </Map>
                         <MapControl position={ControlPosition.TOP_LEFT}>
                             <div className="autocomplete-control">
-                            <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
+                            <PlaceAutocomplete onPlaceSelect={setSelectedPlace} data-testid="autocomplete-input" />
                             </div>
                         </MapControl>
                         <MapHandler place={selectedPlace}/>
                     </div>
                     {showDetails && (
-                        <div className="card details-card shadow-lg p-3 mb-5 bg-body-tertiary rounded brown-txt">
+                        <div className="card details-card shadow-lg p-3 mb-5 bg-body-tertiary rounded brown-txt" data-testid="map-details-container">
                             {photoSrc ? (
                                 <img src={photoSrc} className="card-img-top card-img" alt={`${locName || 'Restaurant'} photo`}></img>
                             ) : (
@@ -389,7 +395,7 @@ function MapPage () {
                                             {selectedFolder ? selectedFolder.folder_name : "Select a folder"}
                                         </button>
                                         <ul className="dropdown-menu" aria-labelledby="folderDropdown">
-                                            {folders.length > 0 ? (
+                                            {folders?.length > 0 ? (
                                             folders.map((folder, index) => (
                                                 <li key={index}>
                                                 <button

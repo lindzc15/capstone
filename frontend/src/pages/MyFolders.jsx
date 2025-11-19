@@ -139,7 +139,7 @@ function MyFolders () {
                             </form>
                         </div>
                         <div className="modal-footer">
-                        <button type="button" className="btn btn-modal" onClick={addFolder}>Add</button>
+                        <button type="button" className="btn btn-modal" onClick={addFolder} data-testid="modal-add-folder">Add</button>
                         <button type="button" className="btn btn-tertiary cancel-btn" onClick={hideModal}>Cancel</button>
                         </div>
                     </div>

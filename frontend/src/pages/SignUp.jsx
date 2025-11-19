@@ -59,7 +59,7 @@ function SignUp() {
             //if unsuccessful, display error
             if (registered) {
                 console.log("logging in");
-                nav("/profile");
+                navigate("/profile");
             }
             else {
                 setError("Account registration failed");
