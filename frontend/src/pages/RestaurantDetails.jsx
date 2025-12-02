@@ -47,6 +47,7 @@ const RestaurantDetails = () => {
 
     //to simplify rating display
     const RATING = {
+        0: '',
         1: '⭐️',
         2: '⭐️⭐️',
         3: '⭐️⭐️⭐️',
@@ -251,7 +252,7 @@ const RestaurantDetails = () => {
                                     <p className="card-text price-txt">
                                         {price ? price : ''} 
                                         {price && rating ? ' | ' : ''} 
-                                        {rating ? rating : 'No rating'}
+                                        {rating ? rating : ''}
                                     </p>
                                 )}
                                 <p className="card-text address-txt">{address[0] || 'Address unavailable'}</p>

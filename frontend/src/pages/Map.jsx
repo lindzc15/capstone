@@ -59,6 +59,7 @@ function MapPage () {
 
     //to simplify rating display
     const RATING = {
+        0: '',
         1: '⭐️',
         2: '⭐️⭐️',
         3: '⭐️⭐️⭐️',
@@ -283,6 +284,7 @@ function MapPage () {
 
         try {
             verify_token();
+            console.log('src: ', photoSrc);
             console.log(`${typeof(selectedFolderId)} ${selectedFolderId}, ${id} ${typeof(id)}, ${priceString} ${typeof(priceString)}, ${ratingNum}, ${typeof(ratingNum)}`);
             const jwt_token = JSON.parse(localStorage.getItem('token'));
             const response = await fetch("http://localhost:8080/api/folders/addrestaurant", {
@@ -292,8 +294,8 @@ function MapPage () {
                         restaurant_id: id,
                         rest_name: locName,
                         loc: addressString,
-                        price_range: priceString,
-                        avg_rating: ratingNum,
+                        price_range: priceString ? priceString : "",
+                        avg_rating: ratingNum ? ratingNum : 0,
                         main_photo_url: photoSrc,
                         jwt_token: jwt_token
                     }),
@@ -378,7 +380,7 @@ function MapPage () {
                                     <p className="card-text price-txt">
                                         {price ? price : ''} 
                                         {price && rating ? ' | ' : ''} 
-                                        {rating ? rating : 'No rating'}
+                                        {rating ? rating : ''}
                                     </p>
                                 )}
                                 <p className="card-text address-txt">{address[0] || 'Address unavailable'}</p>

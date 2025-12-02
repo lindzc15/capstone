@@ -28,6 +28,7 @@ const FolderContents = () => {
 
     //to simplify rating display
     const RATING = {
+        0: '',
         1: '⭐️',
         2: '⭐️⭐️',
         3: '⭐️⭐️⭐️',
@@ -136,7 +137,7 @@ const FolderContents = () => {
                                     <p className="card-text price-txt">
                                         {restaurant.price_range ? PRICE[restaurant.price_range] : ''} 
                                         {restaurant.price_range && restaurant.avg_rating ? ' | ' : ''} 
-                                        {restaurant.avg_rating ? RATING[Math.round(restaurant.avg_rating)] : 'No rating'}
+                                        {restaurant.avg_rating ? RATING[Math.round(restaurant.avg_rating)] : ''}
                                     </p>
                                 )}
                                 <p className="card-text address-txt">{restaurant.loc.split(/,(.+)/).map(p => p.trim())[0] || 'Address unavailable'}</p>
